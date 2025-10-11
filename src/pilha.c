@@ -5,61 +5,62 @@
 
 typedef struct node
 {
-    void *item;
-    node *next;
+    item item;
+    struct node *next;
 
 } node;
 
-typedef struct stack
+ struct pilha
 {
     node *topo;
     int size;
-} stack;
+};
 
-stack* createPilha()
+Pilha* createPilha()
 {
-    stack *Stack = (stack*)malloc(sizeof(stack));
-    Stack -> topo = NULL;
-    Stack -> size = 0;
-    return Stack;
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    if(p == NULL) return NULL;
+    p -> topo = NULL;
+    p -> size = 0;
+    return p;
 }
 
-bool isEmpty(stack *Stack)
+bool isEmpty(Pilha *p)
 {
-    if(Stack -> size == 0) return true;
+    if(p -> size == 0) return true;
     else return false;
 }
 
-void pushPilha(stack *Stack, void *item)
+void pushPilha(Pilha *p, item item)
 {
     node *novaNode = (node*)malloc(sizeof(node));
     novaNode -> item = item;
-    novaNode -> next = Stack -> topo;
-    Stack -> topo = novaNode;
-    Stack -> size++;
+    novaNode -> next = p -> topo;
+    p -> topo = novaNode;
+    p -> size++;
 }
 
-void *popPilha(stack *Stack)
+void *popPilha(Pilha *p)
 {
-    if(isEmpty(Stack)) return NULL;
-    node *temp = Stack -> topo;
+    if(isEmpty(p)) return NULL;
+    node *temp = p -> topo;
     void *item = temp -> item;
-    Stack -> topo = temp -> next;
+    p -> topo = temp -> next;
     free(temp);
-    Stack -> size--;
+    p -> size--;
     return item;
 }
 
-void *peekPilha(stack *Stack)
+void *peekPilha(Pilha *p)
 {
-    if(isEmpty(Stack)) return NULL;
-    return Stack -> topo -> item;
+    if(isEmpty(p)) return NULL;
+    return p -> topo -> item;
 }
 
-void destroyPilha(stack *Stack)
+void destroyPilha(Pilha *p)
 {
-    while(!isEmpty(Stack)){
-        popPilha(Stack);    
+    while(!isEmpty(p)){
+        popPilha(p);    
     }
-    free(Stack);
+    free(p);
 }
