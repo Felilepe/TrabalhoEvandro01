@@ -17,7 +17,7 @@ Circulo createCirculo(int id, double x, double y, double r, char *corborda, char
 {
     circulo *circ= malloc(sizeof(circulo));
     if(circ == NULL){
-        printf("Erro na alocação de memória");
+        printf("Erro na alocação de memória ao criar circulo");
         exit(1);
     }
     
@@ -25,16 +25,16 @@ Circulo createCirculo(int id, double x, double y, double r, char *corborda, char
     circ -> y = y;
     circ -> r = r;
     
-    circ -> corborda = malloc(strlen(sizeof(corborda) + 1));
+    circ -> corborda = (char*)malloc(strlen(sizeof(corborda) + 1));
     if(circ -> corborda == NULL){
-        printf("Erro na alocação da memório ao trocar cor da borda");
+        printf("Erro na alocação da memorio ao trocar cor da borda");
         exit(1);
     }
     strcpy(circ -> corborda, corborda);
 
-    circ -> corpreench = malloc(strlen(sizeof(corpreench) + 1));
+    circ -> corpreench = (char*)malloc(strlen(sizeof(corpreench) + 1));
     if(circ -> corpreench == NULL){
-        printf("Erro na alocação de memória ao trocar cor de preenchimento");
+        printf("Erro na alocacao de memoria ao trocar cor de preenchimento");
         exit(1);
     }
     strcpy(circ -> corpreench, corpreench);
@@ -42,9 +42,26 @@ Circulo createCirculo(int id, double x, double y, double r, char *corborda, char
     return circ;
 }
 
-Circulo moverCirculo(circulo *c, double x, double y)
+
+double getCoordX(Circulo c)
 {
-    c -> x = x;
-    c -> y = y;
+    return ((circulo*)c) -> x;
+
 }
+
+double getCoordY(Circulo c)
+{
+    return ((circulo*)c) -> y;
+}
+
+int getID(Circulo c)
+{
+    return((circulo*)c) -> id;
+}
+
+double getRaio(Circulo c)
+{
+    return ((circulo*)c) -> r;
+}
+
 
