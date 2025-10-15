@@ -24,16 +24,16 @@ double getCoordX(Circulo c);
 
 double getCoordY(Circulo c);
 /****************************************************************************************
-* @brief Obtém a coordenada X do centro de um círculo.                                  *
+* @brief Obtém a coordenada Y do centro de um círculo.                                  *
 * @param c O círculo do qual a coordenada será obtida.                                  *
-* @return Retorna o valor da coordenada X (um double).                                  *
+* @return Retorna o valor da coordenada Y (um double).                                  *
 ****************************************************************************************/
 
 
 double calcArea(Circulo c);
 /****************************************************************************************
 * @brief Obtém a área de um círculo.                                                    *
-* @param c O círculo do qual a raio será obtida.                                        *
+* @param c O círculo do qual a área será obtida.                                        *
 * @return Retorna o valor da área (um double).                                          *
 ****************************************************************************************/
 
