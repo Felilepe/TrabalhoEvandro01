@@ -8,54 +8,62 @@
 typedef struct retangulo 
 {
     int id;
-    double x, y, r;
+    double x, y, w, h;
     char *corborda, *corpreench;
 
 }retangulo;
 
 
-Retangulo createRetangulo(int id, double x, double y, double r, char *corborda, char*corpreench)
+Retangulo createRetangulo(int id, double x, double y, double w, double h, char *corborda, char*corpreench)
 {
-    retangulo *circ= malloc(sizeof(retangulo));
-    if(circ == NULL){
+    retangulo *ret= malloc(sizeof(retangulo));
+    if(ret == NULL){
         printf("Erro na alocação de memória ao criar retangulo");
         exit(1);
     }
     
-    circ -> id = id;
-    circ -> x = x;
-    circ -> y = y;
-    circ -> r = r;
+    ret -> id = id;
+    ret -> x = x;
+    ret -> y = y;
+    ret -> w = w;
+    ret -> h = h;
     
-    circ -> corborda = (char*)malloc(strlen(corborda) + 1);
-    if(circ -> corborda == NULL){
+    ret -> corborda = (char*)malloc(strlen(corborda) + 1);
+    if(ret -> corborda == NULL){
         printf("Erro na alocação da memorio ao trocar cor da borda");
         exit(1);
     }
-    strcpy(circ -> corborda, corborda);
+    strcpy(ret -> corborda, corborda);
 
-    circ -> corpreench = (char*)malloc(strlen(corpreench) + 1);
-    if(circ -> corpreench == NULL){
+    ret -> corpreench = (char*)malloc(strlen(corpreench) + 1);
+    if(ret -> corpreench == NULL){
         printf("Erro na alocacao de memoria ao trocar cor de preenchimento");
         exit(1);
     }
-    strcpy(circ -> corpreench, corpreench);
+    strcpy(ret -> corpreench, corpreench);
 
-    return circ;
+    return ret;
 }
 
 
-double getCoordX(Retangulo c) {return ((retangulo*)c) -> x;}
-
-double getCoordY(Retangulo c) {return ((retangulo*)c) -> y;}
-
-int getID(Retangulo c) {return((retangulo*)c) -> id;}
-
-double getRaio(Retangulo c) {return ((retangulo*)c) -> r;}
-
-double calcArea(Retangulo c) 
+double calcArea(Retangulo r)
 {
-
+    double altura = ((retangulo*)r) -> h;
+    double largura = ((retangulo*)r) -> w;
+    
+    return altura * largura;
 }
+
+
+double getCoordX(Retangulo r) {return ((retangulo*)r) -> x;}
+
+double getCoordY(Retangulo r) {return ((retangulo*)r) -> y;}
+
+int getID(Retangulo r) {return((retangulo*)r) -> id;}
+
+double getHeight(Retangulo r) {return ((retangulo*)r) -> h;}
+
+double getWidth(Retangulo r) {return ((retangulo*)r) -> w;}
+
 
 
