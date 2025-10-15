@@ -4,6 +4,8 @@
 #include <string.h>
 #include "circulo.h"
 
+#define PI 3.14159265359
+
 typedef struct circulo 
 {
     int id;
@@ -21,18 +23,19 @@ Circulo createCirculo(int id, double x, double y, double r, char *corborda, char
         exit(1);
     }
     
+    circ -> id = id;
     circ -> x = x;
     circ -> y = y;
     circ -> r = r;
     
-    circ -> corborda = (char*)malloc(strlen(sizeof(corborda) + 1));
+    circ -> corborda = (char*)malloc(strlen(corborda) + 1);
     if(circ -> corborda == NULL){
         printf("Erro na alocação da memorio ao trocar cor da borda");
         exit(1);
     }
     strcpy(circ -> corborda, corborda);
 
-    circ -> corpreench = (char*)malloc(strlen(sizeof(corpreench) + 1));
+    circ -> corpreench = (char*)malloc(strlen(corpreench) + 1);
     if(circ -> corpreench == NULL){
         printf("Erro na alocacao de memoria ao trocar cor de preenchimento");
         exit(1);
@@ -43,25 +46,18 @@ Circulo createCirculo(int id, double x, double y, double r, char *corborda, char
 }
 
 
-double getCoordX(Circulo c)
-{
-    return ((circulo*)c) -> x;
+double getCoordX(Circulo c) {return ((circulo*)c) -> x;}
 
-}
+double getCoordY(Circulo c) {return ((circulo*)c) -> y;}
 
-double getCoordY(Circulo c)
-{
-    return ((circulo*)c) -> y;
-}
+int getID(Circulo c) {return((circulo*)c) -> id;}
 
-int getID(Circulo c)
-{
-    return((circulo*)c) -> id;
-}
+double getRaio(Circulo c) {return ((circulo*)c) -> r;}
 
-double getRaio(Circulo c)
+double calcArea(Circulo c) 
 {
-    return ((circulo*)c) -> r;
+    double raio = ((circulo*)c) -> r; 
+    return (PI * (raio*raio));
 }
 
 
