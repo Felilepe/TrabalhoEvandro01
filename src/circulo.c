@@ -15,7 +15,7 @@ typedef struct circulo
 }circulo;
 
 
-Circulo circulo_create(int id, double x, double y, double r, char *corborda, char*corpreench)
+Circulo circulo_create(int id, double x, double y, double r, char *corborda, char *corpreench)
 {
     circulo *circ= malloc(sizeof(circulo));
     if(circ == NULL){
@@ -30,14 +30,14 @@ Circulo circulo_create(int id, double x, double y, double r, char *corborda, cha
     
     circ -> corborda = (char*)malloc(strlen(corborda) + 1);
     if(circ -> corborda == NULL){
-        printf("Erro na alocação da memorio ao trocar cor da borda");
+        printf("Erro na alocação da memorio ao atribuir cor da borda");
         exit(1);
     }
     strcpy(circ -> corborda, corborda);
 
     circ -> corpreench = (char*)malloc(strlen(corpreench) + 1);
     if(circ -> corpreench == NULL){
-        printf("Erro na alocacao de memoria ao trocar cor de preenchimento");
+        printf("Erro na alocacao de memoria ao atribuir cor de preenchimento");
         exit(1);
     }
     strcpy(circ -> corpreench, corpreench);

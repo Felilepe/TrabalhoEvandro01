@@ -30,14 +30,14 @@ Retangulo retangulo_create(int id, double x, double y, double w, double h, char 
     
     ret -> corborda = (char*)malloc(strlen(corborda) + 1);
     if(ret -> corborda == NULL){
-        printf("Erro na alocação da memorio ao trocar cor da borda");
+        printf("Erro na alocação da memorio ao atribuir cor da borda");
         exit(1);
     }
     strcpy(ret -> corborda, corborda);
 
     ret -> corpreench = (char*)malloc(strlen(corpreench) + 1);
     if(ret -> corpreench == NULL){
-        printf("Erro na alocacao de memoria ao trocar cor de preenchimento");
+        printf("Erro na alocacao de memoria ao atribuir cor de preenchimento");
         exit(1);
     }
     strcpy(ret -> corpreench, corpreench);
