@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "linha.h"
+#include <math.h>
 
 typedef struct linha
 {
@@ -11,10 +12,10 @@ typedef struct linha
     char* cor;
 }linha;
 
-Linha linha_create(int id, double x1, double x2, double y1, double y2, char* cor)
+Linha linha_create(int id, double x1, double y1, double x2, double y2, char* cor)
 {
     linha *l = malloc(sizeof(linha));
-    if(l = NULL){
+    if(l == NULL){
         printf("Erro na alocacao de memoria ao criar linha");
         exit(1);
     }
@@ -25,6 +26,35 @@ Linha linha_create(int id, double x1, double x2, double y1, double y2, char* cor
     l -> y1 = y1;
     l -> y2 = y2;
     l -> cor = (char*)malloc(strlen(cor) + 1);
+    if(l-> cor == NULL){
+        printf("Erro na alocacao de memoria ao atribuir cor a linha");
+        exit(1);
+    }
+    strcpy(l->cor, cor);
+
+    return l;
+}
+
+int linha_getID(Linha l){return ((linha*)l) -> id;}
+
+double linha_getCoordX1(Linha l){return ((linha*)l) ->x1;}
+
+double linha_getCoordX2(Linha l){return ((linha*)l) ->x2;}
+
+double linha_getCoordY1(Linha l){return ((linha*)l) ->y1;}
+
+double linha_getCoordY2(Linha l){return ((linha*)l) ->y2;}
+
+double linha_calcArea(Linha l)
+{
+    double x1 = ((linha*)l) -> x1;
+    double x2 = ((linha*)l) -> x2;
+    double y1 = ((linha*)l) -> y1;
+    double y2 = ((linha*)l) -> y2;
+
+    return sqrt(pow((x2-x1), 2) + pow((y2-y1), 2)) * 2;
 
 }
+
+
 
