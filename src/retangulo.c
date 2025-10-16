@@ -14,7 +14,7 @@ typedef struct retangulo
 }retangulo;
 
 
-Retangulo createRetangulo(int id, double x, double y, double w, double h, char *corborda, char*corpreench)
+Retangulo retangulo_create(int id, double x, double y, double w, double h, char *corborda, char*corpreench)
 {
     retangulo *ret= malloc(sizeof(retangulo));
     if(ret == NULL){
@@ -46,7 +46,7 @@ Retangulo createRetangulo(int id, double x, double y, double w, double h, char *
 }
 
 
-double calcArea(Retangulo r)
+double retangulo_calcArea(Retangulo r)
 {
     double altura = ((retangulo*)r) -> h;
     double largura = ((retangulo*)r) -> w;
@@ -55,15 +55,15 @@ double calcArea(Retangulo r)
 }
 
 
-double getCoordX(Retangulo r) {return ((retangulo*)r) -> x;}
+double retangulo_getCoordX(Retangulo r) {return ((retangulo*)r) -> x;}
 
-double getCoordY(Retangulo r) {return ((retangulo*)r) -> y;}
+double retangulo_getCoordY(Retangulo r) {return ((retangulo*)r) -> y;}
 
-int getID(Retangulo r) {return((retangulo*)r) -> id;}
+int retangulo_getID(Retangulo r) {return((retangulo*)r) -> id;}
 
-double getHeight(Retangulo r) {return ((retangulo*)r) -> h;}
+double retangulo_getHeight(Retangulo r) {return ((retangulo*)r) -> h;}
 
-double getWidth(Retangulo r) {return ((retangulo*)r) -> w;}
+double retangulo_getWidth(Retangulo r) {return ((retangulo*)r) -> w;}
 
 
 

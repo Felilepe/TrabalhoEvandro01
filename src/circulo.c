@@ -15,7 +15,7 @@ typedef struct circulo
 }circulo;
 
 
-Circulo createCirculo(int id, double x, double y, double r, char *corborda, char*corpreench)
+Circulo circulo_create(int id, double x, double y, double r, char *corborda, char*corpreench)
 {
     circulo *circ= malloc(sizeof(circulo));
     if(circ == NULL){
@@ -46,15 +46,15 @@ Circulo createCirculo(int id, double x, double y, double r, char *corborda, char
 }
 
 
-double getCoordX(Circulo c) {return ((circulo*)c) -> x;}
+double circulo_getCoordX(Circulo c) {return ((circulo*)c) -> x;}
 
-double getCoordY(Circulo c) {return ((circulo*)c) -> y;}
+double circulo_getCoordY(Circulo c) {return ((circulo*)c) -> y;}
 
-int getID(Circulo c) {return((circulo*)c) -> id;}
+int circulo_getID(Circulo c) {return((circulo*)c) -> id;}
 
-double getRaio(Circulo c) {return ((circulo*)c) -> r;}
+double circulo_getRaio(Circulo c) {return ((circulo*)c) -> r;}
 
-double calcArea(Circulo c) 
+double circulo_calcArea(Circulo c) 
 {
     double raio = ((circulo*)c) -> r; 
     return (PI * (raio*raio));
