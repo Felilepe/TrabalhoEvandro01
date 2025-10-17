@@ -12,14 +12,21 @@ typedef struct texto
 }texto;
 
 
-double calcComp (char *txto)
+static double calcComp (char *txto) //Calcula o comprimento da linha
 {
-    return
+    return 10 * strlen(txto);
 }
 
-double calcAnc(double x, double y)
+static double calcAnc(double x, char a, char* txto) //Posiciona a âncora de acordo com a variável "a"
 {
-
+    double comprimento = calcComp(txto);
+    
+    switch(a){
+        case 'i': return x; break;
+        case 'm': return x - comprimento / 2; break;
+        case 'f': return x - comprimento; break;
+        default: return x; 
+    }
 }
 
 
@@ -31,15 +38,8 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, c
         exit(1);
     }
 
-    double tempX = x;
-
-    switch(a){
-        case 'i': break;
-        case 'm': tempX =
-    }
-
     t  -> id = id;
-    t -> x = x;
+    t -> x = calcAnc(x, a, txto);
     t -> y = y;
     t -> a = a;
     t -> corb = (char*)malloc((strlen(corb) + 1));
@@ -65,3 +65,11 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, c
 
     return t;
 }
+
+int texto_getID(Texto t){return ((texto*)t) -> id;}
+
+double texto_getCoordX(Texto t){return ((texto*)t) -> x;}
+
+double texto_getCoordY(Texto t){return ((texto*)t) -> y;}
+
+char *texto_getTexto(Texto t){return ((texto*)t) -> txto;}
