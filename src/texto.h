@@ -13,6 +13,6 @@ double texto_getCoordy(Texto t);
 
 char *texto_getTexto(Texto t);
 
-Texto texto_setStyle(Texto t, char* fFamily, char* fWeight, char* fSize)
+Texto texto_setStyle(Texto t, char* fFamily, char* fWeight, char* fSize);
 
 #endif

@@ -30,7 +30,7 @@ static double calcAnc(double x, char a, char* txto) //Posiciona a âncora de aco
 }
 
 
-Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, char* txto, char* fFamily, char* fWeight, char* fSize)
+Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, char* txto)
 {
     texto *t = malloc(sizeof(texto));
     if(t == NULL){
@@ -38,10 +38,33 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, c
         exit(1);
     }
 
+ 
     t  -> id = id;
     t -> x = x;
     t -> y = y;
     t -> a = a;
+
+    
+    t -> fFamily = (char*)malloc(strlen("Arial") + 1);
+    if(t -> fFamily == NULL){
+    printf("Erro de alocacao de memoria ao atribuir fonte inicial do texto.");
+    exit(1);
+    }
+    strcpy(t -> fFamily, "Arial");
+    
+    t->fWeight = (char*)malloc(strlen("n") + 1);
+    if(t -> fFamily == NULL){
+    printf("Erro de alocacao de memoria ao atribuir peso inicial do texto.");
+    exit(1);
+    }
+    strcpy(t->fWeight, "n");
+
+    t -> fSize = (char*)malloc(strlen("12") + 1);
+    if(t -> fFamily == NULL){
+    printf("Erro de alocacao de memoria ao atribuir tamanho inicial do texto.");
+    exit(1);
+    }
+    strcpy(t -> fSize, "12");
     
     t -> corb = (char*)malloc((strlen(corb) + 1));
     if(t -> corb == NULL){
@@ -64,30 +87,32 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, c
     }
     strcpy(t -> txto, txto);
 
-    t -> fFamily = (char*)malloc((strlen(fFamily) + 1));
-    if(t -> fFamily == NULL){
-        printf("Erro na alocação de memoria ao atribuir familia da fonte");
-        exit(1);
-    }
-    strcpy(t -> fFamily, fFamily);
-
-    t -> fWeight = (char*)malloc((strlen(fWeight) + 1));
-    if(t -> fWeight == NULL){
-        printf("Erro na alocação de memoria ao atribuir peso da fonte");
-        exit(1);
-    }
-    strcpy(t -> fWeight, fWeight);
-
-    t -> fSize = (char*)malloc((strlen(fSize) + 1));
-    if(t -> fSize == NULL){
-        printf("Erro na alocação de memoria ao atribuir tamanho da fonte");
-        exit(1);
-    }
-    strcpy(t -> fSize, fSize);
-    
 
     return t;
 }
+
+
+void texto_setStyle(Texto t, char *fFamily, char *fWeight, double fSize)
+{
+    if(fFamily != NULL){
+        free(((texto*)t) -> fFamily);
+        ((texto*)t) -> fFamily = malloc(strlen(fFamily) + 1);
+        strcpy(((texto*)t) -> fFamily, fFamily);
+    } 
+    
+
+    if(fWeight != NULL){
+        free(((texto*)t) -> fWeight);
+        ((texto*)t) -> fWeight = malloc(strlen(fWeight) + 1);
+        strcpy(((texto*)t) -> fWeight, fWeight); 
+    } 
+    
+
+    if(fSize != NULL){
+        ((texto*)t) -> fSize = fSize;
+    }
+}
+
 
 int texto_getID(Texto t){return ((texto*)t) -> id;}
 
