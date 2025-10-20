@@ -7,7 +7,7 @@ typedef struct texto
 {
     int id;
     double x, y;
-    char *corb, *corp, *txto;
+    char *corb, *corp, *txto, *fFamily, *fWeight, *fSize;
     char a;
 }texto;
 
@@ -30,7 +30,7 @@ static double calcAnc(double x, char a, char* txto) //Posiciona a âncora de aco
 }
 
 
-Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, char* txto)
+Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, char* txto, char* fFamily, char* fWeight, char* fSize)
 {
     texto *t = malloc(sizeof(texto));
     if(t == NULL){
@@ -39,9 +39,10 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, c
     }
 
     t  -> id = id;
-    t -> x = calcAnc(x, a, txto);
+    t -> x = x;
     t -> y = y;
     t -> a = a;
+    
     t -> corb = (char*)malloc((strlen(corb) + 1));
     if(t -> corb == NULL){
         printf("Erro na alocacao de memoria ao atribuir cor de borda");
@@ -50,18 +51,40 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, c
     strcpy(t -> corb, corb);
 
     t -> corp = (char*)malloc((strlen(corp) + 1));
-      if(t -> corp == NULL){
+    if(t -> corp == NULL){
         printf("Erro na alocacao de memoria ao atribuir cor de preenchimento");
         exit(1);
     }
     strcpy(t -> corp, corp);
 
     t -> txto = (char*)malloc((strlen(txto) + 1));
-      if(t -> txto == NULL){
+    if(t -> txto == NULL){
         printf("Erro na alocacao de memoria ao atribuir texto");
         exit(1);
     }
     strcpy(t -> txto, txto);
+
+    t -> fFamily = (char*)malloc((strlen(fFamily) + 1));
+    if(t -> fFamily == NULL){
+        printf("Erro na alocação de memoria ao atribuir familia da fonte");
+        exit(1);
+    }
+    strcpy(t -> fFamily, fFamily);
+
+    t -> fWeight = (char*)malloc((strlen(fWeight) + 1));
+    if(t -> fWeight == NULL){
+        printf("Erro na alocação de memoria ao atribuir peso da fonte");
+        exit(1);
+    }
+    strcpy(t -> fWeight, fWeight);
+
+    t -> fSize = (char*)malloc((strlen(fSize) + 1));
+    if(t -> fSize == NULL){
+        printf("Erro na alocação de memoria ao atribuir tamanho da fonte");
+        exit(1);
+    }
+    strcpy(t -> fSize, fSize);
+    
 
     return t;
 }
