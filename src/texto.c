@@ -16,18 +16,7 @@ static double calcComp (char *txto) //Calcula o comprimento da linha
 {
     return 10 * strlen(txto);
 }
-
-static double calcAnc(double x, char a, char* txto) //Posiciona a âncora de acordo com a variável "a"
-{
-    double comprimento = calcComp(txto);
     
-    switch(a){
-        case 'i': return x; break;
-        case 'm': return x - comprimento / 2; break;
-        case 'f': return x - comprimento; break;
-        default: return x; 
-    }
-}
 
 
 Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, char* txto)
@@ -92,7 +81,7 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char a, c
 }
 
 
-void texto_setStyle(Texto t, char *fFamily, char *fWeight, double fSize)
+void texto_setStyle(Texto t, char *fFamily, char *fWeight, char* fSize)
 {
     if(fFamily != NULL){
         free(((texto*)t) -> fFamily);
@@ -109,7 +98,9 @@ void texto_setStyle(Texto t, char *fFamily, char *fWeight, double fSize)
     
 
     if(fSize != NULL){
-        ((texto*)t) -> fSize = fSize;
+        free(((texto*)t) -> fSize);
+        ((texto*)t) -> fSize = malloc(strlen(fSize) +1);
+        strcpy(((texto*)t) -> fSize, fSize);
     }
 }
 
@@ -121,3 +112,13 @@ double texto_getCoordX(Texto t){return ((texto*)t) -> x;}
 double texto_getCoordY(Texto t){return ((texto*)t) -> y;}
 
 char *texto_getTexto(Texto t){return ((texto*)t) -> txto;}
+
+char *texto_getCorB(Texto t){return ((texto*)t) -> corb;}
+
+char *texto_getCorP(Texto t){return ((texto*)t) -> corp;}
+
+char *texto_getFamily(Texto t){return ((texto*)t) -> fFamily;}
+
+char *texto_getWeight(Texto t){return ((texto*)t) -> fWeight;}
+
+char *texto_getSize(Texto t){return ((texto*)t) -> fSize;}
