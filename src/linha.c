@@ -35,15 +35,20 @@ Linha linha_create(int id, double x1, double y1, double x2, double y2, char* cor
     return l;
 }
 
+
+
 int linha_getID(Linha l){return ((linha*)l) -> id;}
 
-double linha_getCoordX1(Linha l){return ((linha*)l) ->x1;}
+double linha_getCoordX1(Linha l) {return ((linha*)l) -> x1;}
 
-double linha_getCoordX2(Linha l){return ((linha*)l) ->x2;}
+double linha_getCoordX2(Linha l) {return ((linha*)l) -> x2;}
 
-double linha_getCoordY1(Linha l){return ((linha*)l) ->y1;}
+double linha_getCoordY1(Linha l) {return ((linha*)l) -> y1;}
 
-double linha_getCoordY2(Linha l){return ((linha*)l) ->y2;}
+double linha_getCoordY2(Linha l) {return ((linha*)l) -> y2;}
+
+char *linha_getCor(Linha l) {return ((linha*)l) -> cor;}
+
 
 double linha_calcArea(Linha l)
 {
@@ -54,6 +59,23 @@ double linha_calcArea(Linha l)
 
     return sqrt(pow((x2-x1), 2) + pow((y2-y1), 2)) * 2;
 
+}
+
+
+
+void linha_setCoordX1(Linha l, double x1) {((linha*)l) -> x1 = x1;}
+
+void linha_setCoordX2(Linha l, double x2) {((linha*)l) -> x2 = x2;}
+
+void linha_setCoordY1(Linha l, double y1) {((linha*)l) -> y1 = y1;}
+
+void linha_setCoordY2(Linha l, double y2) {((linha*)l) -> y2 = y2;}
+
+void linha_setCor(Linha l, char* cor)
+{
+    free(((linha*)l) -> cor);
+    ((linha*)l) -> cor = (char*)malloc(strlen(cor) + 1);
+    strcpy(((linha*)l) -> cor, cor);
 }
 
 

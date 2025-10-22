@@ -30,6 +30,33 @@ double retangulo_getCoordY(Retangulo r);
 * @return Retorna o valor da coordenada Y (um double).                                  *
 ****************************************************************************************/
 
+char* retangulo_getCorBorda(Retangulo r);
+
+char* retangulo_getCorPreench(Retangulo r);
+
+double retangulo_getHeight(Retangulo r);
+/****************************************************************************************
+ * @brief Obtém a altura de um retângulo.                                                *
+ * @param r O retângulo do qual a altura será obtida.                                    *
+ * @return Retorna o valor da altura (um double).                                        *
+ ****************************************************************************************/
+
+
+double retangulo_getWidth(Retangulo r);
+/****************************************************************************************
+ * @brief Obtém a largura de um retângulo.                                               *
+ * @param r O retângulo do qual a largura será obtida.                                   *
+ * @return Retorna o valor da largura (um double).                                       *
+ ****************************************************************************************/
+
+int retangulo_getID(Retangulo r);
+/****************************************************************************************
+ * @brief Obtém o ID de um retângulo.                                                    *
+ * @param r O retângulo do qual o ID será obtido.                                        *
+ * @return Retorna o valor do ID (um int).                                               *
+ ****************************************************************************************/
+
+
 
 double retangulo_calcArea(Retangulo r);
 /****************************************************************************************
@@ -38,26 +65,20 @@ double retangulo_calcArea(Retangulo r);
 * @return Retorna o valor da área (um double).                                          *
 ****************************************************************************************/
 
-double retangulo_getHeight(Retangulo r);
-/****************************************************************************************
-* @brief Obtém a altura de um retângulo.                                                *
-* @param r O retângulo do qual a altura será obtida.                                    *
-* @return Retorna o valor da altura (um double).                                        *
-****************************************************************************************/
 
 
-double retangulo_getWidth(Retangulo r);
-/****************************************************************************************
-* @brief Obtém a largura de um retângulo.                                               *
-* @param r O retângulo do qual a largura será obtida.                                   *
-* @return Retorna o valor da largura (um double).                                       *
-****************************************************************************************/
+void retangulo_setCoordX(Retangulo r, double x);
 
-int retangulo_getID(Retangulo r);
-/****************************************************************************************
-* @brief Obtém o ID de um retângulo.                                                    *
-* @param r O retângulo do qual o ID será obtido.                                        *
-* @return Retorna o valor do ID (um int).                                               *
-****************************************************************************************/
+void retangulo_setCoordY(Retangulo r, double y);
+
+void retangulo_setHeight(Retangulo r, double h);
+
+void retangulo_setWidth(Retangulo r, double w);
+
+void retangulo_setCorBorda(Retangulo r, char *corborda);
+
+void retangulo_setCorPreench(Retangulo r, char *corpreench);
+
+
 
 #endif

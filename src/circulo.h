@@ -37,12 +37,6 @@ double circulo_calcArea(Circulo c);
 * @return Retorna o valor da área (um double).                                          *
 ****************************************************************************************/
 
-double circulo_getRaio(Circulo c);
-/****************************************************************************************
-* @brief Obtém o raio de um círculo.                                                    *
-* @param c O círculo do qual o raio será obtido.                                        *
-* @return Retorna o valor do raio (um double).                                          *
-****************************************************************************************/
 
 
 int circulo_getID(Circulo c);
@@ -52,5 +46,29 @@ int circulo_getID(Circulo c);
 * @return Retorna o valor do ID (um int).                                               *
 ****************************************************************************************/
 
+char* circulo_getCorBorda(Circulo c);
+
+char* circulo_getCorPreench(Circulo c);
+
+
+
+double circulo_getRaio(Circulo c);
+/****************************************************************************************
+* @brief Obtém o raio de um círculo.                                                    *
+* @param c O círculo do qual o raio será obtido.                                        *
+* @return Retorna o valor do raio (um double).                                          *
+****************************************************************************************/
+
+
+
+void circulo_setCoordX(Circulo c, double x);
+
+void circulo_setCoordY(Circulo c, double y);
+
+void circulo_setRaio(Circulo c, double r);
+
+void circulo_setCorBorda(Circulo c, char *corborda);
+
+void circulo_setCorPreench(Circulo c, char *corpreench);
 
 #endif

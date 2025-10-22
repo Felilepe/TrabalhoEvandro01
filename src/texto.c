@@ -7,7 +7,7 @@ typedef struct texto
 {
     int id;
     double x, y;
-    char *corb, *corp, *txto, *fFamily, *fWeight, *fSize; 
+    char *corborda, *corpreench, *txto, *fFamily, *fWeight, *fSize; 
     char a;
 }texto;
 
@@ -40,7 +40,7 @@ static double calcComp (char *txto) //Calcula o comprimento da linha
     
 
 
-Texto texto_create(int id, double x, double y, char *corb, char *corp, char *a, char* txto)
+Texto texto_create(int id, double x, double y, char *corborda, char *corpreench, char a, char* txto)
 {
     if(default_fFamily == NULL){
         inicializarDefault();
@@ -81,19 +81,19 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char *a, 
     }
     strcpy(t -> fSize, default_fSize);
     
-    t -> corb = (char*)malloc((strlen(corb) + 1));
-    if(t -> corb == NULL){
+    t -> corborda = (char*)malloc((strlen(corborda) + 1));
+    if(t -> corborda == NULL){
         printf("Erro na alocacao de memoria ao atribuir cor de borda");
         exit(1);
     }
-    strcpy(t -> corb, corb);
+    strcpy(t -> corborda, corborda);
 
-    t -> corp = (char*)malloc((strlen(corp) + 1));
-    if(t -> corp == NULL){
+    t -> corpreench = (char*)malloc((strlen(corpreench) + 1));
+    if(t -> corpreench == NULL){
         printf("Erro na alocacao de memoria ao atribuir cor de preenchimento");
         exit(1);
     }
-    strcpy(t -> corp, corp);
+    strcpy(t -> corpreench, corpreench);
 
     t -> txto = (char*)malloc((strlen(txto) + 1));
     if(t -> txto == NULL){
@@ -108,27 +108,27 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char *a, 
 
 
 
-int texto_getID(Texto t){return ((texto*)t) -> id;}
+int texto_getID(Texto t) {return ((texto*)t) -> id;}
 
-double texto_getCoordX(Texto t){return ((texto*)t) -> x;}
+double texto_getCoordX(Texto t) {return ((texto*)t) -> x;}
 
-double texto_getCoordY(Texto t){return ((texto*)t) -> y;}
+double texto_getCoordY(Texto t) {return ((texto*)t) -> y;}
 
-char *texto_getTexto(Texto t){return ((texto*)t) -> txto;}
+char *texto_getTexto(Texto t) {return ((texto*)t) -> txto;}
 
-char *texto_getCorB(Texto t){return ((texto*)t) -> corb;}
+char *texto_getCorBorda(Texto t) {return ((texto*)t) -> corborda;}
 
-char *texto_getCorP(Texto t){return ((texto*)t) -> corp;}
+char *texto_getCorPreench(Texto t) {return ((texto*)t) -> corpreench;}
 
-char *texto_getFamily(Texto t){return ((texto*)t) -> fFamily;}
+char *texto_getFamily(Texto t) {return ((texto*)t) -> fFamily;}
 
-char *texto_getWeight(Texto t){return ((texto*)t) -> fWeight;}
+char *texto_getWeight(Texto t) {return ((texto*)t) -> fWeight;}
 
-char *texto_getSize(Texto t){return ((texto*)t) -> fSize;}
+char *texto_getSize(Texto t) {return ((texto*)t) -> fSize;}
 
-char texto_getAnchor(Texto t){return ((texto*)t)  -> a;}
+char texto_getAnchor(Texto t) {return ((texto*)t)  -> a;}
 
-double texto_getArea(Texto t){return 2 * calcComp(((texto*)t) -> txto);}
+double texto_getArea(Texto t) {return 2 * calcComp(((texto*)t) -> txto);}
 
 
 
@@ -156,18 +156,18 @@ void texto_setCoordX(Texto t, double x) {((texto*)t) -> x = x;}
 
 void texto_setCoordY(Texto t, double y) {((texto*)t) -> y = y;}
 
-void texto_setCorP(Texto t, char* corp)
+void texto_setCorPreench(Texto t, char* corpreench)
 {
-    free(((texto*)t) -> corp);
-    ((texto*)t) -> corp = (char*)malloc(strlen(corp) + 1);
-    strcpy(((texto*)t) -> corp, corp);
+    free(((texto*)t) -> corpreench);
+    ((texto*)t) -> corpreench = (char*)malloc(strlen(corpreench) + 1);
+    strcpy(((texto*)t) -> corpreench, corpreench);
 }
 
-void texto_setCorB(Texto t, char* corb)
+void texto_setCorBorda(Texto t, char* corborda)
 {
-    free(((texto*)t) -> corb);
-    ((texto*)t) -> corb = (char*)malloc(strlen(corb) + 1);
-    strcpy(((texto*)t) -> corb, corb);
+    free(((texto*)t) -> corborda);
+    ((texto*)t) -> corborda = (char*)malloc(strlen(corborda) + 1);
+    strcpy(((texto*)t) -> corborda, corborda);
 }
 
 void texto_setTexto(Texto t, char* txto)
@@ -198,4 +198,4 @@ void texto_setSize(Texto t, char* fSize)
     strcpy(((texto*)t) -> fSize, fSize);
 }
 
-void texto_setAnchor(Texto t, char a){((texto*)t) -> a = a;}
+void texto_setAnchor(Texto t, char a) {((texto*)t) -> a = a;}

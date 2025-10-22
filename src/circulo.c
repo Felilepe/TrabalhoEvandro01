@@ -46,6 +46,7 @@ Circulo circulo_create(int id, double x, double y, double r, char *corborda, cha
 }
 
 
+
 double circulo_getCoordX(Circulo c) {return ((circulo*)c) -> x;}
 
 double circulo_getCoordY(Circulo c) {return ((circulo*)c) -> y;}
@@ -54,6 +55,12 @@ int circulo_getID(Circulo c) {return((circulo*)c) -> id;}
 
 double circulo_getRaio(Circulo c) {return ((circulo*)c) -> r;}
 
+char* circulo_getCorBorda(Circulo c) {return ((circulo*)c) -> corborda;}
+
+char* circulo_getCorPreench(Circulo c) {return ((circulo*)c) -> corpreench;}
+
+
+
 double circulo_calcArea(Circulo c) 
 {
     double raio = ((circulo*)c) -> r; 
@@ -61,3 +68,23 @@ double circulo_calcArea(Circulo c)
 }
 
 
+
+void circulo_setCoordX(Circulo c, double x) {((circulo*)c) -> x = x;}
+
+void circulo_setCoordY(Circulo c, double y) {((circulo*)c) -> y = y;}
+
+void circulo_setRaio(Circulo c, double r) {((circulo*)c) -> r = r;}
+
+void circulo_setCorBorda(Circulo c, char* corborda)
+{
+    free(((circulo*)c) -> corborda);
+    ((circulo*)c) -> corborda = (char*)malloc(strlen(corborda) + 1);
+    strcpy(((circulo*)c) -> corborda, corborda); 
+}
+
+void circulo_setCorPreench(Circulo c, char* corpreench)
+{
+    free(((circulo*)c) -> corpreench);
+    ((circulo*)c) -> corpreench = (char*)malloc(strlen(corpreench) + 1);
+    strcpy(((circulo*)c) -> corpreench, corpreench); 
+}

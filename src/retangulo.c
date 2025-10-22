@@ -14,6 +14,7 @@ typedef struct retangulo
 }retangulo;
 
 
+
 Retangulo retangulo_create(int id, double x, double y, double w, double h, char *corborda, char*corpreench)
 {
     retangulo *ret= malloc(sizeof(retangulo));
@@ -46,6 +47,7 @@ Retangulo retangulo_create(int id, double x, double y, double w, double h, char 
 }
 
 
+
 double retangulo_calcArea(Retangulo r)
 {
     double altura = ((retangulo*)r) -> h;
@@ -53,6 +55,7 @@ double retangulo_calcArea(Retangulo r)
     
     return altura * largura;
 }
+
 
 
 double retangulo_getCoordX(Retangulo r) {return ((retangulo*)r) -> x;}
@@ -65,5 +68,32 @@ double retangulo_getHeight(Retangulo r) {return ((retangulo*)r) -> h;}
 
 double retangulo_getWidth(Retangulo r) {return ((retangulo*)r) -> w;}
 
+char* retangulo_getCorBorda(Retangulo r) {return ((retangulo*)r) -> corborda;}
+
+char* retangulo_getCorPreench(Retangulo r) {return ((retangulo*)r) -> corpreench;}
+
+
+
+void retangulo_setCoordX(Retangulo r, double x) {((retangulo*)r) -> x = x;}
+
+void retangulo_setCoordY(Retangulo r, double y) {((retangulo*)r) -> y = y;}
+
+void retangulo_setHeight(Retangulo r, double h) {((retangulo*)r) -> h = h;}
+
+void retangulo_setWidth(Retangulo r, double w) {((retangulo*)r) -> w = w;}
+
+void retangulo_setCorBorda(Retangulo r, char* corborda)
+{
+    free(((retangulo*)r) -> corborda);
+    ((retangulo*)r) -> corborda = (char*)malloc(strlen(corborda) + 1);
+    strcpy(((retangulo*)r) -> corborda, corborda);
+}
+
+void retangulo_setCorPreench(Retangulo r, char* corpreench)
+{
+    free(((retangulo*)r) -> corpreench);
+    ((retangulo*)r) -> corpreench = (char*)malloc(strlen(corpreench) + 1);
+    strcpy(((retangulo*)r) -> corpreench, corpreench);
+}
 
 
