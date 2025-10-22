@@ -10,11 +10,11 @@ int texto_getID(Texto t);
 
 double texto_getCoordX(Texto t);
 
-double texto_getCoordy(Texto t);
+double texto_getCoordY(Texto t);
 
 char *texto_getTexto(Texto t);
 
-char *texto_getAnchor(Texto t);
+char texto_getAnchor(Texto t);
 
 double texto_getArea(Texto t);
 
@@ -35,9 +35,9 @@ void texto_setCoordX(Texto t, double x);
 
 void texto_seCoordY(Texto t, double y); 
 
-void texto_setcorP(Texto t, char* corp);
+void texto_setCorP(Texto t, char* corp);
 
-void texto_setcorB(Texto t, char* corb);
+void texto_setCorB(Texto t, char* corb);
 
 void texto_setTexto(Texto t, char* txto);
 
@@ -47,7 +47,7 @@ void texto_setWeight(Texto t, char* fWeight);
 
 void texto_setSize(Texto t, char* fSize);
 
-void texto_setAnchor(Texto t, char *a);
+void texto_setAnchor(Texto t, char a);
 
 
 #endif

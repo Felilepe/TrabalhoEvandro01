@@ -7,14 +7,15 @@ typedef struct texto
 {
     int id;
     double x, y;
-    char *corb, *corp, *txto, *fFamily, *fWeight, *fSize, *a;
+    char *corb, *corp, *txto, *fFamily, *fWeight, *fSize; 
+    char a;
 }texto;
 
 
 
 static char *default_fFamily = NULL;
 static char *default_fWeight = NULL;
-static char *default_fSize = NULL;
+static char *default_fSize = NULL;  
 
 static void inicializarDefault()
 {
@@ -42,7 +43,7 @@ static double calcComp (char *txto) //Calcula o comprimento da linha
 Texto texto_create(int id, double x, double y, char *corb, char *corp, char *a, char* txto)
 {
     if(default_fFamily == NULL){
-        inicializarDefault;
+        inicializarDefault();
     }
     
 
@@ -53,7 +54,7 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char *a, 
     }
 
  
-    t  -> id = id;
+    t -> id = id;
     t -> x = x;
     t -> y = y;
     t -> a = a;
@@ -67,14 +68,14 @@ Texto texto_create(int id, double x, double y, char *corb, char *corp, char *a, 
     strcpy(t -> fFamily, default_fFamily);
     
     t->fWeight = (char*)malloc(strlen(default_fWeight) + 1);
-    if(t -> fFamily == NULL){
+    if(t -> fWeight == NULL){
     printf("Erro de alocacao de memoria ao atribuir peso inicial do texto.");
     exit(1);
     }
     strcpy(t->fWeight, default_fWeight);
 
     t -> fSize = (char*)malloc(strlen(default_fSize) + 1);
-    if(t -> fFamily == NULL){
+    if(t -> fSize == NULL){
     printf("Erro de alocacao de memoria ao atribuir tamanho inicial do texto.");
     exit(1);
     }
@@ -125,7 +126,7 @@ char *texto_getWeight(Texto t){return ((texto*)t) -> fWeight;}
 
 char *texto_getSize(Texto t){return ((texto*)t) -> fSize;}
 
-char *texto_getAnchor(Texto t){return ((texto*)t)  -> a;}
+char texto_getAnchor(Texto t){return ((texto*)t)  -> a;}
 
 double texto_getArea(Texto t){return 2 * calcComp(((texto*)t) -> txto);}
 
@@ -134,7 +135,7 @@ double texto_getArea(Texto t){return 2 * calcComp(((texto*)t) -> txto);}
 void texto_setNewDefault(char *fFamily, char *fWeight, char* fSize)
 {
     if(default_fFamily == NULL){
-        inicializarDefault;
+        inicializarDefault();
     }
 
 
@@ -153,16 +154,16 @@ void texto_setNewDefault(char *fFamily, char *fWeight, char* fSize)
 
 void texto_setCoordX(Texto t, double x) {((texto*)t) -> x = x;}
 
-void texto_seCoordY(Texto t, double y) {((texto*)t) -> y = y;}
+void texto_setCoordY(Texto t, double y) {((texto*)t) -> y = y;}
 
-void texto_setcorP(Texto t, char* corp)
+void texto_setCorP(Texto t, char* corp)
 {
     free(((texto*)t) -> corp);
     ((texto*)t) -> corp = (char*)malloc(strlen(corp) + 1);
     strcpy(((texto*)t) -> corp, corp);
 }
 
-void texto_setcorB(Texto t, char* corb)
+void texto_setCorB(Texto t, char* corb)
 {
     free(((texto*)t) -> corb);
     ((texto*)t) -> corb = (char*)malloc(strlen(corb) + 1);
@@ -197,9 +198,4 @@ void texto_setSize(Texto t, char* fSize)
     strcpy(((texto*)t) -> fSize, fSize);
 }
 
-void texto_setAnchor(Texto t, char *a)
-{
-    free(((texto*)t) -> a);
-    ((texto*)t) -> a = (char*)malloc(strlen(a) + 1);
-    strcpy(((texto*)t) -> a, a);
-}
+void texto_setAnchor(Texto t, char a){((texto*)t) -> a = a;}
