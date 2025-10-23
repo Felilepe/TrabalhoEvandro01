@@ -4,30 +4,29 @@
 #include <stdbool.h>
 
 typedef void *item;
-
 typedef struct pilha Pilha;
 
-Pilha *createPilha(); 
-/**************************************************
-*@brief cria uma pilha com tamanho = 0 item = NULL*
-*@return um pointeiro para a pilha inicializada   *
-**************************************************/
+Pilha *pilha_create(); 
+/****************************************************
+*@brief cria uma pilha com tamanho = 0 e item = NULL*
+*@return um pointeiro para a pilha inicializada     *
+****************************************************/
 
-item popPilha(Pilha *p); 
+item pilha_pop(Pilha *p); 
 /*******************************************************************************
 *@brief Remove o item no topo da pilha, retorna NULL caso a pilha esteja vazia.*
 *@param p Pointeiro para a pilha                                               *
 *@return Retorna o endereço para o item                                        *              
 *******************************************************************************/
 
-void pushPilha(Pilha *p, item item); 
+void pilha_push(Pilha *p, item i); 
 /*****************************************************************
 *@brief Adiciona item ao topo da pilha                           *
 *@param Pilha Pointeiro para a pilha aonde será adicionado o item*
 *@param item Pointeiro para o item que será adicionado à pilha   *
 *****************************************************************/
 
-item peekPilha(Pilha *p); 
+item pilha_peek(Pilha *p); 
 /******************************************************************
 *@brief Mostra o item no topo da pilha                            *
 *@param p Pointeiro para a pilha que será checada                 *
@@ -35,17 +34,18 @@ item peekPilha(Pilha *p);
 *Retorna NULL caso a pilha esteja vaiza*                          *
 ******************************************************************/
 
-bool isEmpty(Pilha *p); 
+bool pilha_isEmpty(Pilha *p); 
 /******************************************************************** 
 *@brief Verifica se a pilha está vazia                              *
 *@param Pilha Ponteiro para pilha que será checada                  *
 *@return True se a pilha estiver vazia, caso contrário retorna False*
 ********************************************************************/
 
-void destroyPilha(Pilha *p); 
+void pilha_destroy(Pilha *p); 
 /******************************************************************
 *@brief Libera toda a memória alocada pela pilha (nós e estrutura)*
 *@param p Ponteiro para a pilha a ser destruída                   *
+*@return Não há retorno                                           *
 ******************************************************************/
 
 #endif

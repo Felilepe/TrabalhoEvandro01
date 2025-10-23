@@ -5,7 +5,7 @@
 
 typedef struct node
 {
-    item item;
+    item forma;
     struct node *next;
 
 } node;
@@ -16,7 +16,7 @@ typedef struct node
     int size;
 };
 
-Pilha* createPilha()
+Pilha* pilha_create()
 {
     Pilha *p = (Pilha*)malloc(sizeof(Pilha));
     if(p == NULL) return NULL;
@@ -25,42 +25,42 @@ Pilha* createPilha()
     return p;
 }
 
-bool isEmpty(Pilha *p)
+bool pilha_isEmpty(Pilha *p)
 {
     if(p -> size == 0) return true;
     else return false;
 }
 
-void pushPilha(Pilha *p, item item)
+void pilha_push(Pilha *p, item forma)
 {
     node *novaNode = (node*)malloc(sizeof(node));
-    novaNode -> item = item;
+    novaNode -> forma = forma;
     novaNode -> next = p -> topo;
     p -> topo = novaNode;
     p -> size++;
 }
 
-void *popPilha(Pilha *p)
+item pilha_pop(Pilha *p)
 {
     if(isEmpty(p)) return NULL;
     node *temp = p -> topo;
-    void *item = temp -> item;
+    void *forma = temp -> forma;
     p -> topo = temp -> next;
     free(temp);
     p -> size--;
-    return item;
+    return forma;
 }
 
-void *peekPilha(Pilha *p)
+item pilha_peek(Pilha *p)
 {
-    if(isEmpty(p)) return NULL;
-    return p -> topo -> item;
+    if(pilha_isEmpty(p)) return NULL;
+    return p -> topo -> forma;
 }
 
-void destroyPilha(Pilha *p)
+void piha_destroy(Pilha *p)
 {
-    while(!isEmpty(p)){
-        popPilha(p);    
+    while(!pilha_isEmpty(p)){
+        pilha_pop(p);    
     }
     free(p);
 }
