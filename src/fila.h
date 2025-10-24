@@ -10,11 +10,11 @@ typedef struct fila Fila;
 
 Fila *fila_create();
 
-item fila_queue(Fila f, item i);
+void fila_queue(Fila *f, item i);
 
-item fila_dequeue(Fila f);
+item fila_dequeue(Fila *f);
 
-item fila_peek(Fila f);
+item fila_peek(Fila *f);
 
 bool fila_isEmpty(Fila *f);
 

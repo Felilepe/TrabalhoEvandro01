@@ -19,17 +19,16 @@ typedef struct node
 Pilha* pilha_create()
 {
     Pilha *p = (Pilha*)malloc(sizeof(Pilha));
-    if(p == NULL) return NULL;
+    if(p == NULL){
+        printf("Erro na alocacao de memoria ao criar pilha.");
+        exit(1);
+    }
     p -> topo = NULL;
     p -> size = 0;
     return p;
 }
 
-bool pilha_isEmpty(Pilha *p)
-{
-    if(p -> size == 0) return true;
-    else return false;
-}
+bool pilha_isEmpty(Pilha *p){return p -> size == 0;}
 
 void pilha_push(Pilha *p, item forma)
 {
@@ -53,7 +52,10 @@ item pilha_pop(Pilha *p)
 
 item pilha_peek(Pilha *p)
 {
-    if(pilha_isEmpty(p)) return NULL;
+    if(pilha_isEmpty(p)){
+        printf("Erro: pilha esta vazia.");
+        exit(1);
+    }
     return p -> topo -> forma;
 }
 
