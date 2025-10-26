@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include "colisoes.h"
 
 static double conversaoTxtoLinhaX1(double xt, int char_count, char at)
 {
