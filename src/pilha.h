@@ -13,11 +13,11 @@ Pilha *pilha_create();
 ****************************************************/
 
 item pilha_pop(Pilha *p); 
-/*******************************************************************************
-*@brief Remove o item no topo da pilha, retorna NULL caso a pilha esteja vazia.*
-*@param p Pointeiro para a pilha                                               *
-*@return Retorna o endereço para o item                                        *              
-*******************************************************************************/
+/**********************************************************************************
+*@brief Remove o item no topo da pilha, retorna um erro caso a pilha esteja vazia.*
+*@param p Pointeiro para a pilha                                                  *
+*@return Retorna o endereço para o item                                           *              
+**********************************************************************************/
 
 void pilha_push(Pilha *p, item i); 
 /*****************************************************************
@@ -31,7 +31,7 @@ item pilha_peek(Pilha *p);
 *@brief Mostra o item no topo da pilha                            *
 *@param p Pointeiro para a pilha que será checada                 *
 *@return Retorna o ponteiro para o item que está no topo da pilha.*
-*Retorna NULL caso a pilha esteja vaiza*                          *
+*Retorna um erro caso a pilha esteja vaiza*                       *
 ******************************************************************/
 
 bool pilha_isEmpty(Pilha *p); 

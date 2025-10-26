@@ -41,7 +41,10 @@ void pilha_push(Pilha *p, item forma)
 
 item pilha_pop(Pilha *p)
 {
-    if(isEmpty(p)) return NULL;
+    if(pilha_isEmpty(p)){
+        printf("Erro: Pilha esta vazia.");
+        exit(1);
+    }
     node *temp = p -> topo;
     void *forma = temp -> forma;
     p -> topo = temp -> next;
@@ -59,7 +62,7 @@ item pilha_peek(Pilha *p)
     return p -> topo -> forma;
 }
 
-void piha_destroy(Pilha *p)
+void pilha_destroy(Pilha *p)
 {
     while(!pilha_isEmpty(p)){
         pilha_pop(p);    
