@@ -18,7 +18,7 @@ item fila_peek(Fila *f);
 
 bool fila_isEmpty(Fila *f);
 
-void fila_destroy(Fila f);
+void fila_destroy(Fila* f);
 
 
 #endif
