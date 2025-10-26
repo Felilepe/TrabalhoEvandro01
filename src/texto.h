@@ -14,10 +14,6 @@ double texto_getCoordY(Texto t);
 
 char *texto_getTexto(Texto t);
 
-char texto_getAnchor(Texto t);
-
-double texto_getArea(Texto t);
-
 char *texto_getCorBorda(Texto t);
 
 char *texto_getCorPreench(Texto t);
@@ -27,6 +23,11 @@ char *texto_getFamily(Texto t);
 char *texto_getWeight(Texto t);
 
 char *texto_getSize(Texto t);
+
+char texto_getAnchor(Texto t);
+
+double texto_getArea(Texto t);
+
 
 
 void texto_setNewDefault(char* fFamily, char* fWeight, char* fSize);
@@ -49,5 +50,6 @@ void texto_setSize(Texto t, char* fSize);
 
 void texto_setAnchor(Texto t, char a);
 
+void texto_destroy(Texto t);
 
 #endif

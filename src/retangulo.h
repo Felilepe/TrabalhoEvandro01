@@ -79,6 +79,6 @@ void retangulo_setCorBorda(Retangulo r, char *corborda);
 
 void retangulo_setCorPreench(Retangulo r, char *corpreench);
 
-
+void retangulo_destroy(Retangulo r);
 
 #endif

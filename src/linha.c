@@ -80,3 +80,12 @@ void linha_setCor(Linha l, char* cor)
 
 
 
+void linha_destroy(Linha l)
+{
+    linha *temp = (linha*)l;
+    
+    free(temp -> cor);
+    free(temp);
+}
+
+

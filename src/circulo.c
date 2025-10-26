@@ -88,3 +88,14 @@ void circulo_setCorPreench(Circulo c, char* corpreench)
     ((circulo*)c) -> corpreench = (char*)malloc(strlen(corpreench) + 1);
     strcpy(((circulo*)c) -> corpreench, corpreench); 
 }
+
+
+
+void circulo_destroy(Circulo c)
+{
+    circulo* temp = (circulo*)c;
+
+    free(temp ->corborda);
+    free(temp ->corpreench);
+    free(temp);
+}   

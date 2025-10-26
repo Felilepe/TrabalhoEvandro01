@@ -199,3 +199,17 @@ void texto_setSize(Texto t, char* fSize)
 }
 
 void texto_setAnchor(Texto t, char a) {((texto*)t) -> a = a;}
+
+
+void texto_destroy(Texto*t){
+    texto* ttemp = (texto*)t;
+
+    free(ttemp -> corborda);
+    free(ttemp ->corpreench);
+    free(ttemp ->fFamily);
+    free(ttemp -> fSize);
+    free(ttemp -> fWeight);
+    free(ttemp -> txto);
+    free(ttemp); 
+
+}

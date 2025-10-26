@@ -47,17 +47,6 @@ Retangulo retangulo_create(int id, double x, double y, double w, double h, char 
 }
 
 
-
-double retangulo_calcArea(Retangulo r)
-{
-    double altura = ((retangulo*)r) -> h;
-    double largura = ((retangulo*)r) -> w;
-    
-    return altura * largura;
-}
-
-
-
 double retangulo_getCoordX(Retangulo r) {return ((retangulo*)r) -> x;}
 
 double retangulo_getCoordY(Retangulo r) {return ((retangulo*)r) -> y;}
@@ -72,6 +61,13 @@ char* retangulo_getCorBorda(Retangulo r) {return ((retangulo*)r) -> corborda;}
 
 char* retangulo_getCorPreench(Retangulo r) {return ((retangulo*)r) -> corpreench;}
 
+double retangulo_calcArea(Retangulo r)
+{
+    double altura = ((retangulo*)r) -> h;
+    double largura = ((retangulo*)r) -> w;
+    
+    return altura * largura;
+}
 
 
 void retangulo_setCoordX(Retangulo r, double x) {((retangulo*)r) -> x = x;}
@@ -94,6 +90,14 @@ void retangulo_setCorPreench(Retangulo r, char* corpreench)
     free(((retangulo*)r) -> corpreench);
     ((retangulo*)r) -> corpreench = (char*)malloc(strlen(corpreench) + 1);
     strcpy(((retangulo*)r) -> corpreench, corpreench);
+}
+
+
+void retangulo_destroy(Retangulo r)
+{
+    free(((retangulo*)r) -> corborda);
+    free(((retangulo*)r) -> corpreench);
+    free(r);
 }
 
 
