@@ -12,19 +12,26 @@ Pilha *pilha_create();
 *@return um pointeiro para a pilha inicializada     *
 ****************************************************/
 
-item pilha_pop(Pilha *p); 
+bool pilha_isEmpty(Pilha *p); 
+/******************************************************************** 
+ *@brief Verifica se a pilha está vazia                              *
+ *@param Pilha Ponteiro para pilha que será checada                  *
+ *@return True se a pilha estiver vazia, caso contrário retorna False*
+ ********************************************************************/
+
+void pilha_push(Pilha *p, item i); 
+/*****************************************************************
+ *@brief Adiciona item ao topo da pilha                           *
+ *@param Pilha Pointeiro para a pilha aonde será adicionado o item*
+ *@param item Pointeiro para o item que será adicionado à pilha   *
+ *****************************************************************/
+
+ item pilha_pop(Pilha *p); 
 /**********************************************************************************
 *@brief Remove o item no topo da pilha, retorna um erro caso a pilha esteja vazia.*
 *@param p Pointeiro para a pilha                                                  *
 *@return Retorna o endereço para o item                                           *              
 **********************************************************************************/
-
-void pilha_push(Pilha *p, item i); 
-/*****************************************************************
-*@brief Adiciona item ao topo da pilha                           *
-*@param Pilha Pointeiro para a pilha aonde será adicionado o item*
-*@param item Pointeiro para o item que será adicionado à pilha   *
-*****************************************************************/
 
 item pilha_peek(Pilha *p); 
 /******************************************************************
@@ -34,12 +41,12 @@ item pilha_peek(Pilha *p);
 *Retorna um erro caso a pilha esteja vaiza*                       *
 ******************************************************************/
 
-bool pilha_isEmpty(Pilha *p); 
-/******************************************************************** 
-*@brief Verifica se a pilha está vazia                              *
-*@param Pilha Ponteiro para pilha que será checada                  *
-*@return True se a pilha estiver vazia, caso contrário retorna False*
-********************************************************************/
+int pilha_getSize(Pilha *p);
+/******************************************************************
+*@brief Pega o número de itens atualmente na pilha.               *
+*@param p Ponteiro para a pilha.                                  *
+*@return O número de itens (int) na pilha.                        *
+******************************************************************/
 
 void pilha_destroy(Pilha *p); 
 /******************************************************************
@@ -47,5 +54,6 @@ void pilha_destroy(Pilha *p);
 *@param p Ponteiro para a pilha a ser destruída                   *
 *@return Não há retorno                                           *
 ******************************************************************/
+
 
 #endif

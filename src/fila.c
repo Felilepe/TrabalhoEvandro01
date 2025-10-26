@@ -105,3 +105,9 @@ void fila_destroy(Fila* f)
     }
     free(f);
 }
+
+int fila_getSize(Fila *f)
+{
+    if(f == NULL) return 0;
+    return f -> size;
+}

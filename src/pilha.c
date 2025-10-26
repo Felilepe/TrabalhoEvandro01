@@ -62,6 +62,12 @@ item pilha_peek(Pilha *p)
     return p -> topo -> forma;
 }
 
+int pilha_getSize(Pilha *p)
+{
+    if(p == NULL) return 0;
+    return p -> size;
+}
+
 void pilha_destroy(Pilha *p)
 {
     while(!pilha_isEmpty(p)){
