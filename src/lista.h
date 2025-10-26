@@ -8,9 +8,9 @@ typedef struct lista Lista;
 
 Lista *lista_create();
 
-item lista_remove(Lista *l, item i);
+item lista_remove(Lista *l, i);
 
-void lista_add(Lista *l, item i);
+void lista_insert(Lista *l, item i);
 
 bool lista_isEmpty(Lista *l);
 
