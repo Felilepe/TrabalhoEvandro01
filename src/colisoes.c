@@ -142,8 +142,8 @@ bool colisaoLinhaTxto(double x1l, double x2l, double y1l, double y2l, double xt,
 {
     double x1, x2, y1, y2;
 
-    conversaoTxtoLinhaX1(xt, char_count, at);
-    conversaoTxtoLinhaX2(xt, char_count, at);
+    x1 = conversaoTxtoLinhaX1(xt, char_count, at);
+    x2 = conversaoTxtoLinhaX2(xt, char_count, at);
     y1 = y2 = yt;
 
     return colisaoLinhaLinha(x1l, x2l, y1l, y2l, x1, x2, y1, y2);
