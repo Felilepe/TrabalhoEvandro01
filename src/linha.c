@@ -5,9 +5,11 @@
 #include "linha.h"
 #include <math.h>
 
+#define TIPO_L 3
+
 typedef struct linha
 {
-    int id;
+    int id, type;
     double x1, x2, y1, y2;
     char* cor;
 }linha;
@@ -20,7 +22,8 @@ Linha linha_create(int id, double x1, double y1, double x2, double y2, char* cor
         exit(1);
     }
     
-    l ->id = id;
+    l -> id = id;
+    l -> type = TIPO_L;
     l -> x1 = x1;
     l -> x2 = x2;
     l -> y1 = y1;

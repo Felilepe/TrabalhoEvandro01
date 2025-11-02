@@ -3,9 +3,11 @@
 #include <string.h>
 #include "texto.h"
 
+#define TIPO_T 4
+
 typedef struct texto
 {
-    int id;
+    int id, type;
     double x, y;
     char *corborda, *corpreench, *txto, *fFamily, *fWeight, *fSize; 
     char a;
@@ -55,6 +57,7 @@ Texto texto_create(int id, double x, double y, char *corborda, char *corpreench,
 
  
     t -> id = id;
+    t -> type = TIPO_T;
     t -> x = x;
     t -> y = y;
     t -> a = a;
@@ -128,7 +131,7 @@ char *texto_getSize(Texto t) {return ((texto*)t) -> fSize;}
 
 char texto_getAnchor(Texto t) {return ((texto*)t)  -> a;}
 
-double texto_getArea(Texto t) {return 2 * calcComp(((texto*)t) -> txto);}
+double texto_calcArea(Texto t) {return 2 * calcComp(((texto*)t) -> txto);}
 
 
 

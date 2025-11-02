@@ -26,7 +26,7 @@ char *texto_getSize(Texto t);
 
 char texto_getAnchor(Texto t);
 
-double texto_getArea(Texto t);
+double texto_calcArea(Texto t);
 
 
 

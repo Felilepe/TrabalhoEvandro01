@@ -4,11 +4,12 @@
 #include <string.h>
 #include "circulo.h"
 
+#define TIPO_C 1
 #define PI 3.14159265359
 
 typedef struct circulo 
 {
-    int id;
+    int id, type;
     double x, y, r;
     char *corborda, *corpreench;
 
@@ -24,6 +25,7 @@ Circulo circulo_create(int id, double x, double y, double r, char *corborda, cha
     }
     
     circ -> id = id;
+    circ -> type = TIPO_C;
     circ -> x = x;
     circ -> y = y;
     circ -> r = r;

@@ -4,10 +4,11 @@
 #include <string.h>
 #include "retangulo.h"
 
+#define TIPO_R 2
 
 typedef struct retangulo 
 {
-    int id;
+    int id, type;
     double x, y, w, h;
     char *corborda, *corpreench;
 
@@ -24,6 +25,7 @@ Retangulo retangulo_create(int id, double x, double y, double w, double h, char 
     }
     
     ret -> id = id;
+    ret -> type = TIPO_R;
     ret -> x = x;
     ret -> y = y;
     ret -> w = w;
