@@ -58,7 +58,7 @@ static Linha conversaoTxtoLinha(Texto t) //Cria uma linha utilizando as coordena
     x1 = conversaoCoordTxtoLinhaX1(t);
     x2 = conversaoCoordTxtoLinhaX2(t);
     y1 = y2 = texto_getCoordY(t);
-    Linha temp = linha_create(-1, x1, y1, x2, y2, " ");
+    Linha temp = linha_create(-1, x1, y1, x2, y2, " ", false);
 
     return temp;
 }
@@ -243,16 +243,16 @@ bool colisaoLinhaRet(Linha l, Retangulo r)
     double wr = retangulo_getWidth(r);
     double hr = retangulo_getHeight(r); 
     
-    Linha topo_temp = linha_create(-1, xr, yr, (xr + wr), yr, "");
+    Linha topo_temp = linha_create(-1, xr, yr, (xr + wr), yr, "", false);
     bool colisao_topo = colisaoLinhaLinha(l, topo_temp);
     
-    Linha esq_temp = linha_create(-1, xr, yr, xr, (yr + hr), "");
+    Linha esq_temp = linha_create(-1, xr, yr, xr, (yr + hr), "", false);
     bool colisao_esq = colisaoLinhaLinha(l, esq_temp);
     
-    Linha dir_temp = linha_create(-1, (xr + wr), yr, (xr + wr), (yr + hr), "");
+    Linha dir_temp = linha_create(-1, (xr + wr), yr, (xr + wr), (yr + hr), "", false);
     bool colisao_dir = colisaoLinhaLinha(l, dir_temp);
     
-    Linha chao_temp = linha_create(-1, xr, (yr + hr), (xr + wr), (yr + hr), "");
+    Linha chao_temp = linha_create(-1, xr, (yr + hr), (xr + wr), (yr + hr), "", false);
     bool colisao_chao = colisaoLinhaLinha(l, chao_temp);
     
     linha_destroy(topo_temp);
