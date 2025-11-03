@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "circulo.h"
 #include "linha.h"
 #include "retangulo.h"
@@ -41,6 +42,81 @@ int forma_getType(forma f)
     return forma_generica -> type;
 }
 
+double forma_calcArea(forma f)
+{
+    FormaG* forma_generica = (FormaG*)f;
+    double area;
+    
+    switch(forma_generica -> type){
+        case(TIPO_C): area = circulo_calcArea((Circulo)f); break;
+        case(TIPO_R): area = retangulo_calcArea((Retangulo)f); break;
+        case(TIPO_L): area = linha_calcArea((Linha)f); break; 
+        case(TIPO_T): area = texto_calcArea((Texto)f); break;
+        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+    }
+    return area;
+}
+
+void forma_trocarCores(forma f)
+{
+    if(f == NULL || forma_getCorBorda(f)  == NULL|| forma_getCorPreench(f) == NULL) return;
+    char buffer[32];
+    
+    strcpy(buffer, forma_getCorBorda(f));
+
+    forma_setCorBorda(f, forma_getCorPreench(f));
+    forma_setCorPreench(f, buffer);
+}
+
+void forma_trocaCoresEntreFormas(forma f1, forma f2)
+{
+    if (f1 == NULL || f2 == NULL ||
+        forma_getCorPreench(f1) == NULL ||
+        forma_getCorBorda(f2) == NULL) {
+        return;
+    }
+    
+    char buffer[32];
+    strcpy(buffer, forma_getCorBorda(f2));
+
+    forma_setCorBorda(f2, forma_getCorPreench(f1));
+    forma_setCorPreench(f1, buffer);
+}
+
+void forma_exportarDados(forma f, FILE *file_name, char* report_QRY)
+{
+    int tipo = forma_getType(f);
+    Circulo c = (Circulo)f;
+    Retangulo r = (Retangulo)f;
+    Linha l = (Linha)f;
+    Texto t = (Texto)f;
+
+    const char* report_safe = (report_QRY != NULL) ? report_QRY : "";
+
+    switch(tipo){
+        case(TIPO_C): fprintf(file_name, "%s\n Círculo\n ID: %i\n Âncora em: (%.2lf, %.2lf)\n Raio: %lf\n Cor de borda: %s\n Cor de preenchimento: %s\n",
+            report_safe, circulo_getID(c), circulo_getCoordX(c), circulo_getCoordY(c), circulo_getRaio(c), circulo_getCorBorda(c),
+            circulo_getCorPreench(c)); break;
+
+        case(TIPO_R): fprintf(file_name, "%s\n Retângulo\n ID: %i\n Âncora em: (%.2lf, %.2lf)\n Altura: %lf\n Largura: %lf\n Cor de borda: %s\n Cor de preenchimento: %s\n",
+            report_safe, retangulo_getID(r), retangulo_getCoordX(r), retangulo_getCoordY(r), retangulo_getHeight(r), retangulo_getWidth(r), retangulo_getCorBorda(r),
+            retangulo_getCorPreench(r)); break; 
+
+        case(TIPO_L): fprintf(file_name, "%s\n Linha\n ID: %i\n Âncora de início em: (%.2lf, %.2lf)\n Âncora de fim em: (%.2lf, %.2lf)\n Cor: %s\n",
+            report_safe, linha_getID(l), linha_getCoordX1(l), linha_getCoordY1(l), linha_getCoordX2(l), linha_getCoordY2(l), linha_getCor(l)); break; 
+
+        case(TIPO_T): fprintf(file_name, "%s Texto\n ID: %d\n Âncora em: (%.2f, %.2f)\n Posição da Âncora: %c\n Conteúdo: \"%s\"\n Cor de borda: %s\n Cor de preenchimento: %s\n",
+            report_safe, texto_getID(t), texto_getCoordX, texto_getCoordY, texto_getAnchor, texto_getTexto, texto_getCorBorda(t), 
+            texto_getCorPreench(t)); 
+            fprintf(file_name, " Família da fonte: %s\n Peso da fonte: %s\n Tamanho da fonte: %s\n\n",
+            texto_getFamily(t), texto_getWeight(t), texto_getSize(t)); break;
+
+        default: fprintf(file_name, "Tipo de forma desconhecido."); break;
+    }
+}
+
+
+
 int forma_getID(forma f)
 {
     FormaG* forma_generica = (FormaG*)f;
@@ -55,25 +131,6 @@ int forma_getID(forma f)
     }
     return  ID;
 }
-
-
-
-double forma_calcArea(forma f)
-{
-    FormaG* forma_generica = (FormaG*)f;
-    double area;
-
-    switch(forma_generica -> type){
-        case(TIPO_C): area = circulo_calcArea((Circulo)f); break;
-        case(TIPO_R): area = retangulo_calcArea((Retangulo)f); break;
-        case(TIPO_L): area = linha_calcArea((Linha)f); break; 
-        case(TIPO_T): area = texto_calcArea((Texto)f); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
-    }
-    return area;
-}
-
-
 
 double forma_getCoordX(forma f) 
 {
@@ -135,6 +192,10 @@ char* forma_getCorPreench(forma f)
     return corp;
 }
 
+char* forma_getCorComp(char *cor)
+{
+
+}
 
 
 void forma_setCoordX(forma f, double x)
