@@ -192,11 +192,42 @@ char* forma_getCorPreench(forma f)
     return corp;
 }
 
-char* forma_getCorComp(char *cor)
+char* forma_getCorComp(char* cor_original)
 {
+    int r = 0, g = 0, b = 0; // Padrão é preto
 
+    if (cor_original != NULL && strcmp(cor_original, "none") != 0) 
+    {
+        const char *cor_str = (cor_original[0] == '#') ? cor_original + 1 : cor_original;
+        int len = strlen(cor_str);
+
+        if (len == 6) {
+            sscanf(cor_str, "%02x%02x%02x", &r, &g, &b);
+        }
+        else if (len == 3) {
+            int r_short, g_short, b_short;
+            sscanf(cor_str, "%1x%1x%1x", &r_short, &g_short, &b_short);
+            
+            r = r_short * 17; 
+            g = g_short * 17;
+            b = b_short * 17;
+        }
+    }
+
+    int comp_r = 255 - r;
+    int comp_g = 255 - g;
+    int comp_b = 255 - b;
+
+    char* cor_complementar = (char*) malloc(8 * sizeof(char));
+    if (cor_complementar == NULL) {
+        printf("Falha na alocacao de memoria.");
+        return NULL;
+    }
+
+    sprintf(cor_complementar, "#%02x%02x%02x", comp_r, comp_g, comp_b);
+
+    return cor_complementar;
 }
-
 
 void forma_setCoordX(forma f, double x)
 {
