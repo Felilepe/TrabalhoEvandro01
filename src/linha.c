@@ -12,9 +12,10 @@ typedef struct linha
     int id, type;
     double x1, x2, y1, y2;
     char* cor;
+    bool isDotted
 }linha;
 
-Linha linha_create(int id, double x1, double y1, double x2, double y2, char* cor)
+Linha linha_create(int id, double x1, double y1, double x2, double y2, char* cor, bool isDotted)
 {
     linha *l = malloc(sizeof(linha));
     if(l == NULL){
@@ -28,6 +29,7 @@ Linha linha_create(int id, double x1, double y1, double x2, double y2, char* cor
     l -> x2 = x2;
     l -> y1 = y1;
     l -> y2 = y2;
+    l -> isDotted = isDotted;
     l -> cor = (char*)malloc(strlen(cor) + 1);
     if(l-> cor == NULL){
         printf("Erro na alocacao de memoria ao atribuir cor a linha");
@@ -51,6 +53,8 @@ double linha_getCoordY1(Linha l) {return ((linha*)l) -> y1;}
 double linha_getCoordY2(Linha l) {return ((linha*)l) -> y2;}
 
 char *linha_getCor(Linha l) {return ((linha*)l) -> cor;}
+
+bool linha_getIsDotted(Linha l) {return ((linha*)l) -> isDotted;}
 
 
 double linha_calcArea(Linha l)

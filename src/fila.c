@@ -11,8 +11,8 @@ typedef struct node
 
 struct fila
 {
-    node *first;
-    node *last;
+    node *head;
+    node *tail;
     int size;
 };
 
@@ -24,8 +24,8 @@ Fila *fila_create()
         exit(1);
     }
     
-    f -> first = NULL;
-    f -> last = NULL;
+    f -> head = NULL;
+    f -> tail = NULL;
     f -> size = 0;
 
     return f;
@@ -50,12 +50,12 @@ void fila_queue(Fila *f, item i)
     novoNode -> next = NULL;
     
     
-    if(f -> first == NULL){
-        f -> first = novoNode;
-        f -> last = novoNode;
+    if(f -> head == NULL){
+        f -> head = novoNode;
+        f -> tail = novoNode;
     } else{
-        f -> last -> next = novoNode;
-        f -> last = novoNode;
+        f -> tail -> next = novoNode;
+        f -> tail = novoNode;
     }
 
     f ->size++;
@@ -68,14 +68,14 @@ item fila_dequeue(Fila *f)
         exit(1);
     }
 
-    node *auxNode = f -> first;
+    node *auxNode = f -> head;
 
     item formaReturn = auxNode -> forma;
     
-    f -> first = auxNode -> next;
+    f -> head = auxNode -> next;
 
-    if(f -> first == NULL){
-        f -> last = NULL;
+    if(f -> head == NULL){
+        f -> tail = NULL;
     }
     
     free(auxNode);
@@ -87,15 +87,36 @@ item fila_dequeue(Fila *f)
 }
 
 
-item fila_peek(Fila *f)
+NodeF *fila_getHead(Fila *f)
 {
     if(fila_isEmpty(f)){
         printf("Erro: Fila esta vazia.");
         exit(1);
     }
 
-    return f -> first -> forma;
+    return f -> head;
 }
+
+NodeF *fila_getTail(Fila *f)
+{
+    if(fila_isEmpty(f)){
+        printf("Erro: Fila esta vazia.");
+        exit(1);
+    }
+
+    return f -> tail;
+}
+
+item fila_getItem(NodeF *n) {return n -> forma;} 
+
+NodeF *fila_getNext(NodeF *n) {return n -> next;}
+
+int fila_getSize(Fila *f)
+{
+    if(f == NULL) return 0;
+    return f -> size;
+}
+
 
 
 void fila_destroy(Fila* f)
@@ -106,8 +127,18 @@ void fila_destroy(Fila* f)
     free(f);
 }
 
-int fila_getSize(Fila *f)
-{
-    if(f == NULL) return 0;
-    return f -> size;
+
+
+void fila_passthrough(Fila *f, void (*acao)(item i, item aux_data), item aux_data) {
+	if (f == NULL || acao == NULL || fila_isEmpty(f)) {
+		return;
+	}
+
+	NodeF *atual = f -> head;
+
+	while (atual != NULL) {
+		acao(atual -> forma, aux_data);
+
+		atual = atual -> next;
+	}
 }
