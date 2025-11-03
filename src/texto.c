@@ -131,6 +131,8 @@ char *texto_getSize(Texto t) {return ((texto*)t) -> fSize;}
 
 char texto_getAnchor(Texto t) {return ((texto*)t)  -> a;}
 
+int texto_getCharCount(Texto t) {return strlen(((texto*)t) -> txto);}
+
 double texto_calcArea(Texto t) {return 2 * calcComp(((texto*)t) -> txto);}
 
 
@@ -204,7 +206,7 @@ void texto_setSize(Texto t, char* fSize)
 void texto_setAnchor(Texto t, char a) {((texto*)t) -> a = a;}
 
 
-void texto_destroy(Texto*t){
+void texto_destroy(Texto t){
     texto* ttemp = (texto*)t;
 
     free(ttemp -> corborda);

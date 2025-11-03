@@ -9,6 +9,7 @@ int forma_getID(forma f);
 
 
 
+int forma_getType(forma f);
 double forma_getCoordX(forma f);
 double forma_getCoordY(forma f);
 char* forma_getCorBorda(forma f);

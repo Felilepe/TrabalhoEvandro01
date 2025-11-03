@@ -3,9 +3,22 @@
 #include <stdbool.h>
 #include <math.h>
 #include "colisoes.h"
+#include "formas.h"
+#include "circulo.h"
+#include "retangulo.h"
+#include "texto.h"
+#include "linha.h"
 
-static double conversaoTxtoLinhaX1(double xt, int char_count, char at)
+#define TIPO_C 1
+#define TIPO_R 2
+#define TIPO_L 3
+#define TIPO_T 4
+
+static double conversaoCoordTxtoLinhaX1(Texto t) // Converte a coordenada de x de um texto para uma coordenada x1 de uma linha
 {
+    double xt = texto_getCoordX(t);
+    int char_count = texto_getCharCount(t);
+    char at = texto_getAnchor(t);
     double x1;
 
     switch(at){
@@ -19,8 +32,11 @@ static double conversaoTxtoLinhaX1(double xt, int char_count, char at)
     return  x1;
 }
 
-static double conversaoTxtoLinhaX2(double xt, int char_count, char at)
+static double conversaoCoordTxtoLinhaX2(Texto t) // Converte a coordenada de x de um texto para uma coordenada x1 de uma linha
 {
+    double xt = texto_getCoordX(t);
+    int char_count = texto_getCharCount(t);
+    char at = texto_getAnchor(t);
     double x2;
 
     switch(at){
@@ -34,22 +50,106 @@ static double conversaoTxtoLinhaX2(double xt, int char_count, char at)
     return x2;
 }
 
-
-
-bool colisaoCircCirc(double xc1, double yc1, double rc1, double xc2, double yc2, double rc2)
+static Linha conversaoTxtoLinha(Texto t) //Cria uma linha utilizando as coordenadas de um texto
 {
+    double x1, x2;
+    double y1, y2;
+
+    x1 = conversaoCoordTxtoLinhaX1(t);
+    x2 = conversaoCoordTxtoLinhaX2(t);
+    y1 = y2 = texto_getCoordY(t);
+    Linha temp = linha_create(-1, x1, y1, x2, y2, " ");
+
+    return temp;
+}
+
+bool checarColisao(forma f1, forma f2)
+{
+    int f1_type = forma_getType(f1);
+    int f2_type = forma_getType(f2);
+
+    
+    switch(f1_type){
+        case(TIPO_C):{
+            switch(f2_type){
+                case(TIPO_C): return colisaoCircCirc((Circulo)f1, (Circulo)f2); break;
+                case(TIPO_R): return colisaoCircRet((Circulo)f1, (Retangulo)f2); break;
+                case(TIPO_L): return colisaoCircLinha((Circulo)f1, (Linha)f2); break;
+                case(TIPO_T): return colisaoCircTxto((Circulo)f1, (Texto)f2); break;
+                default: return false; break;
+            }
+        }; break;
+        case(TIPO_R):{
+            switch(f2_type){
+                case(TIPO_C): return colisaoCircRet((Circulo)f1, (Retangulo)f2); break;
+                case(TIPO_R): return colisaoRetRet((Retangulo)f1, (Retangulo)f2); break;
+                case(TIPO_L): return colisaoLinhaRet((Linha)f1, (Retangulo)f2); break;
+                case(TIPO_T): return colisaoRetTxto((Retangulo)f1, (Texto)f2); break;
+                default: return false;   
+            }
+        }; break;
+        case(TIPO_L):{
+            switch(f2_type){
+                case(TIPO_C): return colisaoCircLinha((Circulo)f1, (Linha)f2); break;
+                case(TIPO_R): return colisaoLinhaRet((Linha)f1, (Retangulo)f2); break;
+                case(TIPO_L): return colisaoLinhaLinha((Linha)f1, (Linha)f2); break;
+                case(TIPO_T): return colisaoLinhaTxto((Linha)f1, (Texto)f2); break;
+                default: return false; break;
+            }
+        }; break;
+        case(TIPO_T):{
+            switch(f2_type){
+                case(TIPO_C): return colisaoCircTxto((Circulo)f1, (Texto)f2); break;
+                case(TIPO_R): return colisaoRetTxto((Retangulo)f1, (Texto)f2); break;
+                case(TIPO_L): return colisaoLinhaTxto((Linha)f1, (Texto)f2); break;
+                case(TIPO_T): return colisaoTxtoTxto((Texto)f1, (Texto)f2); break;
+                default: return false; break;
+            }
+        }; break;
+        default: return false; break;
+    }
+}
+
+
+
+bool colisaoCircCirc(Circulo c1, Circulo c2)
+{
+    double xc1 = circulo_getCoordX(c1);
+    double yc1 = circulo_getCoordY(c1);
+    double rc1 = circulo_getRaio(c1);
+    double xc2 = circulo_getCoordX(c2);
+    double yc2 = circulo_getCoordY(c2);
+    double rc2 = circulo_getRaio(c2);
+    
     double dist = sqrt(pow((xc1-xc2),2) + pow((yc1-yc2),2));
 
     return dist <= (rc1 + rc2);
 }
 
-bool colisaoRetRet(double xr1, double yr1, double wr1, double hr1, double xr2, double yr2, double wr2, double hr2)
+bool colisaoRetRet(Retangulo r1, Retangulo r2)
 {
+    double xr1 = retangulo_getCoordX(r1);
+    double yr1 = retangulo_getCoordY(r1); 
+    double wr1 = retangulo_getWidth(r1); 
+    double hr1 = retangulo_getHeight(r1); 
+    double xr2 = retangulo_getCoordX(r2); 
+    double yr2 = retangulo_getCoordY(r2); 
+    double wr2 = retangulo_getWidth(r2); 
+    double hr2 = retangulo_getHeight(r2);
+    
     return !(xr1 > xr2 + wr2 || xr1 + wr1 < xr2 || yr1 > yr2 + hr2 || yr1 + hr1 < yr2); 
 }
 
-bool colisaoCircRet(double xc, double yc, double rc, double xr, double yr, double wr, double hr)
+bool colisaoCircRet(Circulo c, Retangulo r)
 {
+    double xc = circulo_getCoordX(c);
+    double yc = circulo_getCoordY(c);
+    double rc = circulo_getRaio(c);
+    double xr = retangulo_getCoordX(r);
+    double yr = retangulo_getCoordY(r); 
+    double wr = retangulo_getWidth(r);
+    double hr = retangulo_getHeight(r);  
+
     double ponto_proxX = fmax(xr, xc);
 
     ponto_proxX = fmin(ponto_proxX, xr + wr);
@@ -64,8 +164,18 @@ bool colisaoCircRet(double xc, double yc, double rc, double xr, double yr, doubl
     return dist <= rc;
 }
 
-bool colisaoLinhaLinha(double x1l1, double x2l1, double y1l1, double y2l1, double x1l2, double x2l2, double y1l2, double y2l2)
+bool colisaoLinhaLinha(Linha l1, Linha l2)
 {
+    double x1l1 = linha_getCoordX1(l1);
+    double x2l1 = linha_getCoordX2(l1);
+    double y1l1 = linha_getCoordY1(l1);
+    double y2l1 = linha_getCoordY2(l1);
+    double x1l2 = linha_getCoordX1(l2);
+    double x2l2 = linha_getCoordX2(l2);
+    double y1l2 = linha_getCoordY1(l2);
+    double y2l2 = linha_getCoordY2(l2);
+
+    
     double D = (x1l1 - x2l1) * ( y1l2 - y2l2) - (y1l1 - y2l1) * (x1l2 - x2l2);
 
     if(!D) return false;
@@ -77,8 +187,16 @@ bool colisaoLinhaLinha(double x1l1, double x2l1, double y1l1, double y2l1, doubl
     return((t >= 0 && t <= 1) && (u >= 0 && u <= 1));
 }
 
-bool colisaoCircLinha(double xc, double yc, double rc, double x1l, double x2l, double y1l, double y2l)
+bool colisaoCircLinha(Circulo c, Linha l)
 {
+    double xc = circulo_getCoordX(c);
+    double yc = circulo_getCoordY(c);
+    double rc = circulo_getRaio(c);
+    double x1l = linha_getCoordX1(l);
+    double x2l = linha_getCoordX2(l);
+    double y1l = linha_getCoordY1(l);
+    double y2l = linha_getCoordY2(l);
+    
     double deltaX = x2l - x1l;
     double deltaY = y2l - y1l;
     
@@ -106,73 +224,77 @@ bool colisaoCircLinha(double xc, double yc, double rc, double x1l, double x2l, d
     return (pow((xc -ponto_proxX), 2) + pow((yc - ponto_proxY), 2)) <= (rc * rc);
 }
 
-bool colisaoCircTxto(double xc, double yc, double rc, double xt, double yt, int char_count, char at)
+bool colisaoCircTxto(Circulo c, Texto t)
 {
-    double x1, x2;
-    double y1, y2;
+    Linha temp = conversaoTxtoLinha(t);
 
-    x1 = conversaoTxtoLinhaX1(xt, char_count, at);
-    x2 = conversaoTxtoLinhaX2(xt, char_count, at);
-    y1 = y2 = yt;
+    bool colisao  = colisaoCircLinha(c, temp);
 
-    return colisaoCircLinha(xc, yc, rc, x1, x2, y1, y2);
+    linha_destroy(temp);
 
-
+    return colisao;
 }
 
 
-bool colisaoLinhaRet(double x1l, double x2l, double y1l, double y2l, double xr, double yr, double wr, double hr)
+bool colisaoLinhaRet(Linha l, Retangulo r)
 {
-    bool colisao_topo = colisaoLinhaLinha(x1l, x2l, y1l, y2l, xr, (xr + wr), yr, yr);
-
-    bool colisao_esq = colisaoLinhaLinha(x1l, x2l, y1l, y2l, xr, xr, yr, (yr + hr));
-
-    bool colisao_dir = colisaoLinhaLinha(x1l, x2l, y1l, y2l, (xr + wr), (xr + wr), yr, (yr + hr));
-
-    bool colisao_chao = colisaoLinhaLinha(x1l, x2l, y1l, y2l, xr, (xr + wr), (yr + hr), (yr + hr));
-
+    double xr = retangulo_getCoordX(r);
+    double yr = retangulo_getCoordY(r); 
+    double wr = retangulo_getWidth(r);
+    double hr = retangulo_getHeight(r); 
     
+    Linha topo_temp = linha_create(-1, xr, yr, (xr + wr), yr, "");
+    bool colisao_topo = colisaoLinhaLinha(l, topo_temp);
+    
+    Linha esq_temp = linha_create(-1, xr, yr, xr, (yr + hr), "");
+    bool colisao_esq = colisaoLinhaLinha(l, esq_temp);
+    
+    Linha dir_temp = linha_create(-1, (xr + wr), yr, (xr + wr), (yr + hr), "");
+    bool colisao_dir = colisaoLinhaLinha(l, dir_temp);
+    
+    Linha chao_temp = linha_create(-1, xr, (yr + hr), (xr + wr), (yr + hr), "");
+    bool colisao_chao = colisaoLinhaLinha(l, chao_temp);
+    
+    linha_destroy(topo_temp);
+    linha_destroy(esq_temp);
+    linha_destroy(dir_temp);
+    linha_destroy(chao_temp);
+    
+    double x1l = linha_getCoordX1(l), y1l = linha_getCoordY1(l);
     if(x1l >= xr && x1l <= (xr + wr) && y1l >= yr && y1l <= (yr + hr)) return true;
     
     
     return (colisao_chao || colisao_dir || colisao_esq || colisao_topo);
 }
 
-bool colisaoLinhaTxto(double x1l, double x2l, double y1l, double y2l, double xt, double yt, int char_count, char at)
+bool colisaoLinhaTxto(Linha l, Texto t)
 {
-    double x1, x2, y1, y2;
-
-    x1 = conversaoTxtoLinhaX1(xt, char_count, at);
-    x2 = conversaoTxtoLinhaX2(xt, char_count, at);
-    y1 = y2 = yt;
-
-    return colisaoLinhaLinha(x1l, x2l, y1l, y2l, x1, x2, y1, y2);
-}
-
-bool colisaoRetTxto(double xr, double yr, double wr, double hr, double xt, double yt, int char_count, char at)
-{
-    double x1, x2, y1, y2;
+    Linha temp = conversaoTxtoLinha(t);
     
-    x1 = conversaoTxtoLinhaX1(xt, char_count, at);
-    x2 = conversaoTxtoLinhaX2(xt, char_count, at);
-    y1= y2 = yt;
+    bool colisao = colisaoLinhaLinha(l, temp);
 
-    return colisaoLinhaRet(x1, x2, y1, y1, xr, yr, wr, hr);
+    linha_destroy(temp);
+
+    return colisao;
 }
 
-bool colisaoTxtoTxto(double xt1, double yt1, int char_count1, char at1, double xt2, double yt2, int char_count2, char at2)
+bool colisaoRetTxto(Retangulo r, Texto t)
 {
-    double x1, x2, x3, x4;
-    double y1, y2, y3, y4;
+    Linha temp = conversaoTxtoLinha(t);
+    bool colisao = colisaoLinhaRet(temp, r);
 
-    x1 = conversaoTxtoLinhaX1(xt1, char_count1, at1);
-    x2 = conversaoTxtoLinhaX2(xt1, char_count1, at1);
-    x3 = conversaoTxtoLinhaX1(xt2, char_count2, at2);
-    x4 = conversaoTxtoLinhaX2(xt2, char_count2, at2);
+    linha_destroy(temp);
 
-    y1 = y2 = yt1;
+    return colisao;
+}
 
-    y3 = y4 = yt2;
+bool colisaoTxtoTxto(Texto t1, Texto t2)
+{
+    Linha temp1 = conversaoTxtoLinha(t1), temp2 = conversaoTxtoLinha(t2);
+    bool colisao = colisaoLinhaLinha(temp1, temp2);
 
-    return colisaoLinhaLinha(x1, x2, y1, y2, x3, x4, y3, y4);
+    linha_destroy(temp1);
+    linha_destroy(temp2);
+
+    return colisao;
 }

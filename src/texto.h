@@ -26,6 +26,8 @@ char *texto_getSize(Texto t);
 
 char texto_getAnchor(Texto t);
 
+int texto_getCharCount(Texto t);
+
 double texto_calcArea(Texto t);
 
 

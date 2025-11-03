@@ -6,15 +6,16 @@
 #include "texto.h"
 #include "formas.h"
 
+#define TIPO_C 1
+#define TIPO_R 2
+#define TIPO_L 3
+#define TIPO_T 4
+
 typedef struct forma_g
 {
     int type;
 } FormaG;
 
-#define TIPO_C 1
-#define TIPO_R 2
-#define TIPO_L 3
-#define TIPO_T 4
 
 
 
@@ -33,6 +34,12 @@ void forma_destroy(forma f)
 }
 
 
+
+int forma_getType(forma f)
+{
+    FormaG* forma_generica = (FormaG*)f;
+    return forma_generica -> type;
+}
 
 int forma_getID(forma f)
 {
