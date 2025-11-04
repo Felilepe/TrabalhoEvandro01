@@ -1,6 +1,6 @@
 #include "lerQry.h"
 #include "carregador.h"
-#include "Disparador.h"
+#include "disparador.h"
 #include "arena.h"
 #include "formas.h"
 #include "texto.h"

@@ -15,7 +15,8 @@
 
 typedef struct forma_g
 {
-    int type;
+    int id;   
+    int type; 
 } FormaG;
 
 
@@ -40,8 +41,22 @@ void forma_destroy(forma f)
 int forma_getType(forma f)
 {
     FormaG* forma_generica = (FormaG*)f;
-    return forma_generica -> type;
+    if(forma_generica == NULL){
+        printf("Erro: forma no forma_getType é nula.");
+        exit(1);
+    }
+    int type;
+
+    switch(forma_generica -> type){
+        case(TIPO_C):type = circulo_getType((Circulo)f); break;
+        case(TIPO_R):type = retangulo_getType((Retangulo)f); break;
+        case(TIPO_L):type = linha_getType((Linha)f); break;
+        case(TIPO_T):type = texto_getType((Texto)f); break;
+        default: printf("Erro: tipo de forma invalido no forma_getType. Tipo %d", forma_generica -> type); exit(1); break;
+    }
+    return type;
 }
+
 
 double forma_calcArea(forma f)
 {
@@ -53,7 +68,7 @@ double forma_calcArea(forma f)
         case(TIPO_R): area = retangulo_calcArea((Retangulo)f); break;
         case(TIPO_L): area = linha_calcArea((Linha)f); break; 
         case(TIPO_T): area = texto_calcArea((Texto)f); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido no forma_calcArea."); exit(1); break;
     }
     return area;
 }
@@ -112,7 +127,7 @@ void forma_exportarDados(forma f, FILE *file_name, char* report_QRY)
             fprintf(file_name, " Família da fonte: %s\n Peso da fonte: %s\n Tamanho da fonte: %s\n\n",
             texto_getFamily(t), texto_getWeight(t), texto_getSize(t)); break;
 
-        default: fprintf(file_name, "Tipo de forma desconhecido."); break;
+        default: fprintf(file_name, "Tipo de forma desconhecido no forma_exportarDados."); break;
     }
 }
 
@@ -201,7 +216,7 @@ int forma_getID(forma f)
         case(TIPO_R): ID = retangulo_getID((Retangulo)f); break;
         case(TIPO_L): ID = linha_getID((Linha)f); break;
         case(TIPO_T): ID = texto_getID((Texto)f); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido no forma_getID."); exit(1); break;
     }
     return  ID;
 }
@@ -216,7 +231,7 @@ double forma_getCoordX(forma f)
         case(TIPO_R): coordx = retangulo_getCoordX((Retangulo)f); break;
         case(TIPO_L): coordx = linha_getCoordX1((Linha)f); break; //Por convenção, x1 será considerado o X da âncora
         case(TIPO_T): coordx = texto_getCoordX((Texto)f); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido no forma_getCoordX."); exit(1); break;
     }
     return coordx;
 }
@@ -231,7 +246,7 @@ double forma_getCoordY(forma f)
         case(TIPO_R): coordy = retangulo_getCoordY((Retangulo)f); break;
         case(TIPO_L): coordy = linha_getCoordY1((Linha)f); break; //Por convenção, y1 será considerado o Y da âncora
         case(TIPO_T): coordy = texto_getCoordY((Texto)f); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido no forma_getCoordY."); exit(1); break;
     }
     return coordy;
 }
@@ -246,7 +261,7 @@ char* forma_getCorBorda(forma f)
         case(TIPO_R): corb =  retangulo_getCorBorda((Retangulo)f); break;
         case(TIPO_L): corb =  linha_getCor((Linha)f); break; //Por convenção, como linha só possui o parâmetro "cor", iremos considerá-la a cor de "borda"
         case(TIPO_T): corb = texto_getCorBorda((Texto)f); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido no forma_getCorBorda."); exit(1); break;
     }
     return corb;
 }
@@ -261,7 +276,7 @@ char* forma_getCorPreench(forma f)
         case(TIPO_R): corp = retangulo_getCorPreench((Retangulo)f); break;
         case(TIPO_L): printf("Erro: tipo de forma invalido. Para linhas, utilize 'forma_getCorBorda'"); break; 
         case(TIPO_T): corp = texto_getCorBorda((Texto)f); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido no forma_getCorPreench."); exit(1); break;
     }
     return corp;
 }
@@ -294,7 +309,7 @@ char* forma_getCorComp(char* cor_original)
 
     char* cor_complementar = (char*) malloc(8 * sizeof(char));
     if (cor_complementar == NULL) {
-        printf("Falha na alocacao de memoria.");
+        printf("Falha na alocacao de memoria em forma_getCorComp.");
         return NULL;
     }
 
@@ -323,7 +338,7 @@ void forma_setCoordX(forma f, double x)
             linha_setCoordX2(l, (x + delta));
             break;
         }
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido em forma_setCoordX."); exit(1); break;
     }
 }
 
@@ -347,7 +362,7 @@ void forma_setCoordY(forma f, double y)
             linha_setCoordY2(l, (y + delta));
             break;
         }
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido em forma_setCoordY."); exit(1); break;
     }
 }
 
@@ -360,7 +375,7 @@ void forma_setCorBorda(forma f, char* corb)
         case(TIPO_R): retangulo_setCorBorda((Retangulo)f, corb); break;
         case(TIPO_L): linha_setCor((Linha)f, corb); break; //Mesma convenção do forma_getCorBorda
         case(TIPO_T): texto_setCorBorda((Texto)f, corb); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido em forma_setCorBorda."); exit(1); break;
     }
 }
 
@@ -373,6 +388,6 @@ void forma_setCorPreench(forma f, char* corp)
         case(TIPO_R): retangulo_setCorPreench((Retangulo)f, corp); break;
         case(TIPO_L): printf("Erro: tipo de forma invalido. Para linhas, utilize 'forma_setCorBorda'"); break;         
         case(TIPO_T): texto_setCorPreench((Texto)f, corp); break;
-        default: printf("Erro: tipo de forma invalido."); exit(1); break;
+        default: printf("Erro: tipo de forma invalido em forma_setCorPreench."); exit(1); break;
     }
 }

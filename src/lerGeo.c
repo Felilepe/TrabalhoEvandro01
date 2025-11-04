@@ -1,9 +1,10 @@
     #include "lerGeo.h"
     #include "fila.h"
     #include "circulo.h"
-    #include "Linha.h"
-    #include "Retangulo.h"
-    #include "Texto.h"
+    #include "linha.h"
+    #include "retangulo.h"
+    #include "texto.h"
+    #include "formas.h"
 
     #include <stdio.h>
     #include <stdlib.h>
@@ -42,7 +43,7 @@
         int num_lidos = sscanf(Linha, "c %i %lf %lf %lf %s %s", &id, &x, &y, &r, corb, corp);
         if (num_lidos < 4) return;
 
-        Circulo *c = circulo_create(id, x, y, r, corb, corp);
+        Circulo c = circulo_create(id, x, y, r, corb, corp);
         fila_queue(meuChao, c);
     }
 
@@ -54,7 +55,7 @@
         int num_lidos = sscanf(Linha, "r %i %lf %lf %lf %lf %s %s", &id, &x, &y, &w, &h, corb, corp);
         if (num_lidos < 5) return;
 
-        Retangulo *r = retangulo_create(id, x, y, w, h, corb, corp);
+        Retangulo r = retangulo_create(id, x, y, w, h, corb, corp);
         fila_queue(meuChao, r);
     }
 
@@ -66,7 +67,7 @@
         int num_lidos = sscanf(Linha_buffer, "l %i %lf %lf %lf %lf %s", &id, &x1, &y1, &x2, &y2, cor);
         if (num_lidos < 5) return;
 
-        Linha *l = linha_create(id, x1, y1, x2, y2, cor, false);
+        Linha l = linha_create(id, x1, y1, x2, y2, cor, false);
         fila_queue(meuChao, l);
     }
 
@@ -82,7 +83,7 @@
 
         geo_extrairTexto(Linha_buffer, offset, conteudo_Texto, sizeof(conteudo_Texto));
 
-        Texto *t = texto_create(id, x, y, corb, corp, ancora, conteudo_Texto);
+        Texto t = texto_create(id, x, y, corb, corp, ancora, conteudo_Texto);
 
         if (t) {
             fila_queue(meuChao, t);

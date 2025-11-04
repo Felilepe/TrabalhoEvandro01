@@ -12,7 +12,7 @@ typedef struct linha
     int id, type;
     double x1, x2, y1, y2;
     char* cor;
-    bool isDotted
+    bool isDotted;
 }linha;
 
 Linha linha_create(int id, double x1, double y1, double x2, double y2, char* cor, bool isDotted)
@@ -55,6 +55,8 @@ double linha_getCoordY2(Linha l) {return ((linha*)l) -> y2;}
 char *linha_getCor(Linha l) {return ((linha*)l) -> cor;}
 
 bool linha_getIsDotted(Linha l) {return ((linha*)l) -> isDotted;}
+
+int linha_getType(Linha l) {return ((linha*)l) -> type;}
 
 
 double linha_calcArea(Linha l)

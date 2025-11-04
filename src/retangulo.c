@@ -63,6 +63,8 @@ char* retangulo_getCorBorda(Retangulo r) {return ((retangulo*)r) -> corborda;}
 
 char* retangulo_getCorPreench(Retangulo r) {return ((retangulo*)r) -> corpreench;}
 
+int retangulo_getType(Retangulo r) {return ((retangulo*)r) -> type;}
+
 double retangulo_calcArea(Retangulo r)
 {
     double altura = ((retangulo*)r) -> h;

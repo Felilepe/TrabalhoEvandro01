@@ -61,6 +61,8 @@ char* circulo_getCorBorda(Circulo c) {return ((circulo*)c) -> corborda;}
 
 char* circulo_getCorPreench(Circulo c) {return ((circulo*)c) -> corpreench;}
 
+int circulo_getType(Circulo c) {return ((circulo*)c) -> type;}
+
 
 
 double circulo_calcArea(Circulo c) 

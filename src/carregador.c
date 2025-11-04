@@ -25,9 +25,9 @@ Carregador carregador_create(int id)
     return c;
 }
 
-int carregador_getID(Carregador *c) {return ((carregador*)c) -> id;}
+int carregador_getID(Carregador c) {return ((carregador*)c) -> id;}
 
-forma carregador_loadForma(Carregador *c, forma f)
+forma carregador_loadForma(Carregador c, forma f)
 {
     if(c == NULL || f == NULL){
         printf("Erro: carregador e/ou forma identificado(s) como sendo nulo.\n");
@@ -45,7 +45,7 @@ forma carregador_loadForma(Carregador *c, forma f)
     return f;
 }
 
-forma carregador_loadFromChao(Carregador *c, Chao *h)
+forma carregador_loadFromChao(Carregador c, Chao *h)
 {
     if (c == NULL || h == NULL) {
 		printf("Erro: chao e/ou carregador identificado(s) como sendo nulo.\n");
@@ -58,7 +58,7 @@ forma f = fila_dequeue(h);
     return f;
 }
 
-Chao *carregador_loadAmount(Chao *h, Carregador *c, int n)
+Chao *carregador_loadAmount(Chao *h, Carregador c, int n)
 {
     if (c == NULL || h == NULL) {
 		if(n < 0) return fila_create();
@@ -81,7 +81,7 @@ Chao *carregador_loadAmount(Chao *h, Carregador *c, int n)
     return Historico;
 }
 
-bool carregador_isEmpty(Carregador *c)
+bool carregador_isEmpty(Carregador c)
 {
     carregador *mag = (carregador*)c;
     if(c == NULL) return true;
@@ -89,30 +89,28 @@ bool carregador_isEmpty(Carregador *c)
     return pilha_isEmpty(mag -> p);
 }
 
-void carregador_destroy(Carregador **c_point)
-{
-    if (c_point == NULL || *c_point == NULL) {
-		return;
-	}
-
-	carregador *c = (carregador*)*c_point;
-
-	pilha_destroy(c -> p);
-
-	free(c);
-
-	*c_point = NULL;
-}
 
 
-forma carregador_remove(Carregador *c)
+forma carregador_remove(Carregador c)
 {
     if(c == NULL){
         printf("Erro: Carregador Nulo.");
         return NULL;
     }
-
+    
     carregador* mag = (carregador*)c;
-        
-        return pilha_pop(mag -> p);
+    
+    return pilha_pop(mag -> p);
+}
+
+void carregador_destroy(Carregador c)
+{
+    if (c == NULL) {
+        return;
+    }
+
+    carregador* temp = (carregador*)c;
+
+    pilha_destroy(temp -> p);
+    free(temp);
 }

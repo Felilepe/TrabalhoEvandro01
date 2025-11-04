@@ -66,6 +66,13 @@ double retangulo_getWidth(Retangulo r);
  ****************************************************************************************/
 int retangulo_getID(Retangulo r);
 
+/****************************************************************************************
+ * @brief Obtém o Tipo de um retângulo.                                                    
+ * @param r O retângulo do qual o Tipo será obtido.                                        
+ * @return Retorna o valor do Tipo (um int).                                               
+ ****************************************************************************************/
+int retangulo_getType(Retangulo r);
+
 
 
 /****************************************************************************************

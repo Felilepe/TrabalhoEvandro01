@@ -67,6 +67,13 @@ char* linha_getCor(Linha l);
 ******************************************************************/
 bool linha_getIsDotted(Linha l);
 
+/******************************************************************
+*@brief Obtém o tipo de uma linha.
+*@param l A linha.
+*@return O Tipo (int).
+******************************************************************/
+int linha_getType(Linha l);
+
 
 /******************************************************************
 *@brief Calcula a "área" (comprimento) de uma linha.
