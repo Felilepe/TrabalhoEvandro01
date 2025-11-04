@@ -9,10 +9,6 @@
 
 #define DEFAULT_WIDTH 1.5
 #define OPACITY 0.5
-#define TIPO_C 1
-#define TIPO_R 2
-#define TIPO_L 3
-#define TIPO_T 4
 
 
 FILE* startSVG(const char* file_path) {
@@ -83,7 +79,12 @@ void svg_insertForma(FILE *file_name, forma f)
         case(TIPO_R): svg_insertRetangulo(file_name, (Retangulo)f); break;
         case(TIPO_L): svg_insertLinha(file_name, (Linha)f); break;
         case(TIPO_T): svg_insertTexto(file_name, (Texto)f); break;
-        default: printf("Erro: Tipo de forma invalido."); exit(1); break;
+        default: printf("--- ERRO DE DEBUG ---\\n");
+            printf("A forma com ID: %d retornou um TIPO desconhecido: %d\\n", forma_getID(f), forma_getType(f));
+            printf("(Esperado: 1, 2, 3 ou 4)\\n");
+            printf("---------------------\\n");
+            exit(1); 
+            break;
     }
 }
 
@@ -92,7 +93,8 @@ void svg_insertForma(FILE *file_name, forma f)
 void draw(item i, item aux)
 {
     FILE* svg = (FILE*)aux;
-	svg_insertForma((forma)i, svg);
+    /* Chamada correta: primeiro FILE*, depois a forma opaca */
+    svg_insertForma(svg, (forma)i);
 }
 
 
