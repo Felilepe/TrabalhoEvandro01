@@ -134,7 +134,7 @@ double texto_calcArea(Texto t) {return 2 * calcComp(((texto*)t) -> txto);}
 
 
 
-void texto_setNewDefault(char *fFamily, char *fWeight, char* fSize)
+void texto_setNewStyle(char *fFamily, char *fWeight, char* fSize)
 {
     if(default_fFamily == NULL){
         inicializarDefault();

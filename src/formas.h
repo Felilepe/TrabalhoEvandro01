@@ -22,7 +22,7 @@ forma forma_clonar(forma f);
 
 void forma_exportarDados(forma f, FILE *file_name, char* report_QRY);
 
-
+forma forma_clonar(forma f);
 
 
 int forma_getID(forma f);

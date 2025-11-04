@@ -34,7 +34,7 @@ Disparador *disparador_create(int id, double x, double y, Carregador *cesq, Carr
 
 
 
-int disparador_getId(Disparador *d)
+int disparador_getID(Disparador *d)
 {
     if(d == NULL){
         printf("Erro: Disparador nulo.");
@@ -211,12 +211,12 @@ Fila *disparador_rajada(Disparador *d, char botao, double dx, double dy, double 
 		if (formaDisparada != NULL) {
 
 			arena_add(a, formaDisparada);
-			queue(fila_disparos, formaDisparada);
+			fila_queue(fila_disparos, formaDisparada);
 			formas_disparadas++;
 		}
 	}
 
-	posicionaDisparador(d, x_original, y_original);
+	disparador_move(d, x_original, y_original);
 
 	return fila_disparos;
 }

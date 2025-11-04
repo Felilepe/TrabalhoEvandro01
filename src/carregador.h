@@ -8,7 +8,7 @@
 
 typedef void* Carregador;
 
-Carregador *carregador_create(int id);
+Carregador carregador_create(int id);
 
 int carregador_getID(Carregador *c);
 

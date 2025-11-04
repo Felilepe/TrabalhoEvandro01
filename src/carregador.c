@@ -12,7 +12,7 @@ typedef struct carregador
     Pilha *p;
 } carregador;
 
-Carregador *carregador_create(int id)
+Carregador carregador_create(int id)
 {
     carregador *c = (carregador*)malloc(sizeof(carregador));
     if(c == NULL){
@@ -51,10 +51,11 @@ forma carregador_loadFromChao(Carregador *c, Chao *h)
 		printf("Erro: chao e/ou carregador identificado(s) como sendo nulo.\n");
 	}
 
+forma f = fila_dequeue(h);
     
-    carregador *mag = (carregador*)c;
+    carregador_loadForma(c, f);
 
-    carregador_loadForma(mag, fila_dequeue(h));
+    return f;
 }
 
 Chao *carregador_loadAmount(Chao *h, Carregador *c, int n)
@@ -64,6 +65,7 @@ Chao *carregador_loadAmount(Chao *h, Carregador *c, int n)
         printf("Erro: chao e/ou carregador identificado(s) como sendo nulo.\n");
         return NULL;
 	}
+    carregador *mag = (carregador*)c;
 
     Fila *Historico = fila_create();
 
@@ -72,9 +74,11 @@ Chao *carregador_loadAmount(Chao *h, Carregador *c, int n)
             printf("Chao foi esvaziado.\n");
             break;
         }
-        fila_queue(Historico, fila_getHead(c));
+        fila_queue(Historico, pilha_peek(mag ->p));
         carregador_loadFromChao(c, h);
     }
+
+    return Historico;
 }
 
 bool carregador_isEmpty(Carregador *c)
@@ -91,9 +95,9 @@ void carregador_destroy(Carregador **c_point)
 		return;
 	}
 
-	carregador *c = *c_point;
+	carregador *c = (carregador*)*c_point;
 
-	liberaPilha(c -> p, NULL);
+	pilha_destroy(c -> p);
 
 	free(c);
 
@@ -110,5 +114,5 @@ forma carregador_remove(Carregador *c)
 
     carregador* mag = (carregador*)c;
         
-        return pilha_pop(mag);
+        return pilha_pop(mag -> p);
 }

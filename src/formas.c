@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include "circulo.h"
 #include "linha.h"
@@ -196,10 +197,10 @@ int forma_getID(forma f)
     int ID;
     
     switch(forma_generica -> type){
-        case(TIPO_C): ID = circulo_getID((Circulo)f);
-        case(TIPO_R): ID = retangulo_getID((Retangulo)f);
-        case(TIPO_L): ID = linha_getID((Linha)f);
-        case(TIPO_T): ID = texto_getID((Texto)f);
+        case(TIPO_C): ID = circulo_getID((Circulo)f); break;
+        case(TIPO_R): ID = retangulo_getID((Retangulo)f); break;
+        case(TIPO_L): ID = linha_getID((Linha)f); break;
+        case(TIPO_T): ID = texto_getID((Texto)f); break;
         default: printf("Erro: tipo de forma invalido."); exit(1); break;
     }
     return  ID;
