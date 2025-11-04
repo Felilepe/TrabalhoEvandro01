@@ -3,6 +3,7 @@
 #include "disparador.h"
 #include "formas.h"
 #include "carregador.h"
+#include "pilha.h"
 
 struct disparador
 {
@@ -37,7 +38,7 @@ int disparador_getId(Disparador *d)
 {
     if(d == NULL){
         printf("Erro: Disparador nulo.");
-        return NULL;
+        return -1;
     }
 
     return d -> id;
@@ -119,25 +120,38 @@ item disparador_shift(Disparador *d, char b, int n) //shft
     case 'e': 
         for(int i = 0; i < n; i++){
             if(d -> pos_lanc != NULL){
-                pilha_push(d -> cdir, d -> pos_lanc);
+                carregador_loadForma(d -> cdir, d -> pos_lanc);
             }
-            d -> pos_lanc = pilha_pop(d -> cesq);
+            d -> pos_lanc = carregador_remove(d -> cesq);
         } break;
     case 'd':
         for(int i = 0; i < n; i++){
             if(d -> pos_lanc != NULL){
-                pilha_push(d -> cesq, d ->pos_lanc);
+                carregador_loadForma(d -> cesq, d ->pos_lanc);
             }
-            d -> pos_lanc = pilha_pop(d -> cdir);
+            d -> pos_lanc = carregador_remove(d -> cdir);
         } break;
     
     default: printf("Erro: Botao %c nao e uma opcao aceita.", b);
     exit(1);
 
 
-    return d -> pos_lanc;
     }
+    
+    return d -> pos_lanc;
 }
+
+void disparador_move(Disparador *d, double dx, double dy)
+{
+    if(d == NULL){
+        printf("Erro: Disparador nulo.");
+        return;
+    }
+
+    d -> x = dx;
+    d -> y = dy;
+}
+
 
 forma disparador_disparar(Disparador *d, double dx, double dy)
 {
@@ -170,9 +184,58 @@ forma disparador_disparar(Disparador *d, double dx, double dy)
 
 }
 
+Fila *disparador_rajada(Disparador *d, char botao, double dx, double dy, double ix, double iy, Arena *a) {
+	if (d == NULL || a == NULL) {
+		return NULL;
+	}
+
+	double x_original = disparador_getCoordX(d);
+	double y_original = disparador_getCoordY(d);
+
+	Fila *fila_disparos = fila_create();
+	int formas_disparadas = 0;
 
 
-void destrutorDisparador(Disparador **ptr_disparador) 
+	for (int i = 0; ; i++) {
+
+		forma *formaAtual = disparador_shift(d, botao, 1);
+		if (formaAtual == NULL) {
+			break;
+		}
+
+		double dx_atual = dx + (i * ix);
+		double dy_atual = dy + (i * iy);
+
+		forma *formaDisparada = disparador_disparar(d, dx_atual, dy_atual);
+
+		if (formaDisparada != NULL) {
+
+			arena_add(a, formaDisparada);
+			queue(fila_disparos, formaDisparada);
+			formas_disparadas++;
+		}
+	}
+
+	posicionaDisparador(d, x_original, y_original);
+
+	return fila_disparos;
+}
+
+
+void disparador_removeForma(Disparador *d, forma f)
+{
+    if (d == NULL || f == NULL) {
+		return;
+	}
+
+	if (d -> pos_lanc == f) {
+		d -> pos_lanc = NULL;
+	}
+}
+
+
+
+void disparador_destroy(Disparador **ptr_disparador) 
 {
 	if (ptr_disparador == NULL || *ptr_disparador == NULL) return;
 

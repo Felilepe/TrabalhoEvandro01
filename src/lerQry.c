@@ -127,9 +127,9 @@ static void esvaziar_carregador_no_chao(item i, item aux_data)
 {
     Carregador* car = (Carregador*)i;
     Fila* chao = (Fila*)aux_data; 
-    while (!carregadorEstaVazio(car)) { // (Assumido)
+    while (!carregador_isEmpty(car)) { // (Assumido)
         // CORREÇÃO: 'forma' (void*) em vez de 'forma*' (void**)
-        forma f = removeDoCarregador(car); // f é void* (Assumido)
+        forma f = carregador_remove(car); // f é void* (Assumido)
         if (f != NULL) {
             fila_queue(chao, f);
         }
@@ -141,10 +141,10 @@ static void esvaziar_disparador_no_chao(item i, item aux_data)
     Disparador* d = (Disparador*)i;
     Fila* chao = (Fila*)aux_data; 
     // CORREÇÃO: 'forma' (void*) em vez de 'forma*' (void**)
-    forma f = getFormaEmDisparo(d); // f é void* (Assumido)
+    forma f = disparador_getFormaDisparo(d); // f é void* (Assumido)
     if (f != NULL) {
         fila_queue(chao, f);
-        limpaFormaDoDisparador(d, f); // (Assumido)
+        disparador_removeForma(d, f); // (Assumido)
     }
 }
 
@@ -152,9 +152,9 @@ static void limpar_forma_do_disparador_se_igual(item i, item aux_data)
 {
     Disparador* d = (Disparador*)i;
     forma f_alvo = (forma)aux_data; // f_alvo é void*
-    forma f_no_disparador = getFormaEmDisparo(d);
+    forma f_no_disparador = disparador_getFormaDisparo(d);
     if (f_no_disparador != NULL && f_no_disparador == f_alvo) {
-        limpaFormaDoDisparador(d, f_alvo); 
+        disparador_removeForma(d, f_alvo); 
     }
 }
 
@@ -358,7 +358,7 @@ static void processar_pd(char* linha, Repositorio* repo, estatisticas* stats) {
     sscanf(linha, "pd %i %lf %lf", &id, &x, &y);
     Disparador *d = encontrarOuCriarDisparador(repo, id);
     if (d) {
-        posicionaDisparador(d, x, y); // (Função do TAD Disparador)
+        disparador_move(d, x, y); // (Função do TAD Disparador)
         stats -> instrucoes_realizadas++;
     }
 }
@@ -369,7 +369,7 @@ static void processar_lc(char* linha, Repositorio* repo, Chao* chao, FILE* arqui
     Carregador *c = encontrarOuCriarCarregador(repo, id);
     if (c) {
         stats -> instrucoes_realizadas++;
-        Fila *formas_carregadas = loadCarregadorN(chao, c, n); // (Função do TAD Carregador)
+        Fila *formas_carregadas = carregador_loadAmount(chao, c, n); // (Função do TAD Carregador)
         if (formas_carregadas != NULL) {
             fila_passthrough(formas_carregadas, acao_reportar_forma, arquivo_txt);
             fila_destroy(formas_carregadas);
@@ -384,7 +384,7 @@ static void processar_atch(char* linha, Repositorio* repo, estatisticas* stats) 
     Carregador *c1 = encontrarOuCriarCarregador(repo, id2);
     Carregador *c2 = encontrarOuCriarCarregador(repo, id3);
     if (d && c1 && c2) {
-        attachDisparador(d, c1, c2); // (Função do TAD Disparador)
+        disparador_attachCarregador(d, c1, c2); // (Função do TAD Disparador)
         stats -> instrucoes_realizadas++;
     }
 }
@@ -397,8 +397,8 @@ static void processar_shft(char* linha, Repositorio* repo, FILE* arquivo_txt, es
     Disparador *d = (Disparador*) encontrar_item_na_lista(repo->Disparadores, id, acao_encontrar_disparador);
     if (d) {
         stats->instrucoes_realizadas++;
-        shiftDisparador(d, botao, n); // (Função do TAD Disparador)
-        forma forma_final = getFormaEmDisparo(d);
+        disparador_shift(d, botao, n); // (Função do TAD Disparador)
+        forma forma_final = disparador_getFormaDisparo(d);
         if (forma_final) {
             forma_exportarDados(forma_final, arquivo_txt, "  -> Forma final:");
         } else {
@@ -417,14 +417,14 @@ static void processar_dsp(char* linha, Repositorio* repo, Arena* arena,
     Disparador* d = (Disparador*) encontrar_item_na_lista(repo->Disparadores, id, acao_encontrar_disparador);
     if (d) {
         stats->instrucoes_realizadas++;
-        double x_inicial = getXdisparador(d); // (Assumido)
-        double y_inicial = getYdisparador(d); // (Assumido)
+        double x_inicial = disparador_getCoordX(d); // (Assumido)
+        double y_inicial = disparador_getCoordY(d); // (Assumido)
         
-        forma forma_disparada = disparaDisparador(d, dx, dy); // (Assumido)
+        forma forma_disparada = disparador_disparar(d, dx, dy); // (Assumido)
 
         if (forma_disparada) {
             stats->total_disparos++;
-            arena_adicionarForma(arena, forma_disparada); // (Assumido)
+            arena_add(arena, forma_disparada); // (Assumido)
 
             double x_final = forma_getCoordX(forma_disparada);
             double y_final = forma_getCoordY(forma_disparada);
@@ -449,7 +449,7 @@ static void processar_rjd(char* linha, Repositorio* repo, Arena* arena,
     Disparador *d = (Disparador*) encontrar_item_na_lista(repo->Disparadores, id, acao_encontrar_disparador);
     if (d) {
         stats->instrucoes_realizadas++;
-        Fila *formas_disparadas = rajadaDisparador(d, botao, dx, dy, ix, iy, arena); // (Assumido)
+        Fila *formas_disparadas = disparador_rajada(d, botao, dx, dy, ix, iy, arena); // (Assumido)
         if (formas_disparadas != NULL) {
             int tamFilaDisparos = fila_getSize(formas_disparadas);
             stats->total_disparos += tamFilaDisparos;

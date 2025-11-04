@@ -6,6 +6,8 @@
 #define TIPO_L 3
 #define TIPO_T 4
 
+#include <stdio.h>
+
 typedef void* forma;
 
 void forma_destroy(forma f);

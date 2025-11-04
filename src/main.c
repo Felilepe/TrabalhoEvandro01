@@ -20,7 +20,7 @@ static void montaCaminho(char* path_completo, const char* base_dir, const char* 
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]){
 
     // --- 1. Processamento dos Parâmetros da Linha de Comando (O seu código está correto) ---
     char* dir_entrada = NULL;
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     if (meu_chao == NULL) {
         fprintf(stderr,"Falha critica ao processar o .geo (%s)\n", path_geo_completo);
         // (Corrigindo nomes de destrutores)
-        arena_destroy(minha_arena);     // (Assumindo arena_destroy)
+        arena_destroy(&minha_arena);     // (Assumindo arena_destroy)
         destrutorRepositorio(repo);
         fila_destroy(anotacoes_svg);    // (De fila.h)
         return 1;
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     // --- 5. Geração do SVG Inicial (Corrigido) ---
     printf("Gerando SVG inicial: %s\n", path_svg_inicial);
     // (getFilaDoChao não é necessário, 'meu_chao' JÁ É uma Fila)
-    gerarArquivoSvg(path_svg_inicial, meu_chao);
+    createSVG(path_svg_inicial, meu_chao);
 
     // --- 6. Execução do ProcessaQry (se aplicável) (Corrigido) ---
     if (arq_qry_nome != NULL) {
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
         }
 
         printf("Gerando SVG final: %s\n", path_svg_final);
-        gerarArquivoSvg(path_svg_final, meu_chao);
+        createSVG(path_svg_final, meu_chao);
     }
 
 
@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
     
     // (destrutorChao é fila_destroy, pois Chao é uma Fila)
     fila_destroy(meu_chao);
-    arena_destroy(minha_arena); // (Assumindo arena_destroy)
+    arena_destroy(&minha_arena); // (Assumindo arena_destroy)
     fila_destroy(anotacoes_svg);
     printf("Programa finalizado com sucesso.\n");
 

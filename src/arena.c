@@ -8,11 +8,13 @@
 
 
 
-typedef struct arena {
+struct arena 
+{
     Fila *filaArena;
-}Arena;
+};
 
-Arena *arena_create() {
+Arena *arena_create() 
+{
     Arena *a = (Arena*) malloc (sizeof(Arena));
     if (a == NULL) {
         printf("Erro ao criar a arena.\n");
@@ -26,7 +28,8 @@ Arena *arena_create() {
     return a;
 }
 
-forma arena_add(Arena *a, forma *f) {
+forma arena_add(Arena *a, forma *f) 
+{
     if (f == NULL) {
         return NULL;
     }
@@ -41,37 +44,37 @@ forma arena_add(Arena *a, forma *f) {
     return f;
 }
 
-forma arena_remove(Arena *a) {
+forma arena_remove(Arena *a) 
+{
     if (a == NULL ) return NULL;
 
-    forma *removido = dequeue(a -> filaArena);
+    forma removido = fila_dequeue(a -> filaArena);
 
     return removido;
 }
 
-bool arena_isEmpty(Arena *a) {
+bool arena_isEmpty(Arena *a) 
+{
     if (a == NULL) return true;
 
     return fila_isEmpty(a -> filaArena);
 }
 
-void arena_destroy(Arena **a_ptr) {
+void arena_destroy(Arena **a_ptr) 
+{
     if (a_ptr == NULL || *a_ptr == NULL) {
         return;
     }
     Arena* a = *a_ptr;
 
-    liberaFila(a -> filaArena, NULL);
+    fila_destroy(a -> filaArena);
 
     free(a);
     *a_ptr = NULL;
 }
 
-int arena_getSize(Arena *a) {
-    return fila_getSize(a -> filaArena);
-}
-
-int arena_getSize(Arena *a) {
+int arena_getSize(Arena *a) 
+{
     if (a == NULL) {
         return -1;
     }
@@ -80,8 +83,9 @@ int arena_getSize(Arena *a) {
 }
 
 
-void processaArena(Fila *a, Fila *c, double *pontuacao_total, Fila *anotacoes_svg,
-                   FILE *arquivo_txt, int *formas_clonadas, int *formas_esmagadas, Lista *repo) {
+void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_svg,
+                   FILE *arquivo_txt, int *formas_clonadas, int *formas_esmagadas) 
+{
     if (c == NULL || a == NULL || arquivo_txt == NULL) {
         printf("Erro: Parâmetros nulos passados para processaArena!\n");
         return;
@@ -90,14 +94,14 @@ void processaArena(Fila *a, Fila *c, double *pontuacao_total, Fila *anotacoes_sv
     double area_esmagada_round = 0.0;
 
     // printf("\n=== INICIANDO PROCESSAMENTO DA ARENA ===\n");
-    while (getTamArena(a) >= 2) {
+    while (arena_getSize(a) >= 2) {
         
         // CORREÇÃO: 'forma' já é um ponteiro (void*), não 'forma*' (void**)
         forma forma_I = arena_remove(a);
         forma forma_J = arena_remove(a);
 
         // CORREÇÃO: Nome da função de colisão
-        if (formasSobrepoem(forma_I, forma_J)) {
+        if (checarColisao(forma_I, forma_J)) {
             // printf("\nSobreposição detectada!\n");
 
             double area_I = forma_calcArea(forma_I);
@@ -188,7 +192,7 @@ void processaArena(Fila *a, Fila *c, double *pontuacao_total, Fila *anotacoes_sv
     }
 
     // Devolver a última forma que sobrou (se houver) para o chão
-    if (!arenaEstaVazia(a)) {
+    if (!arena_isEmpty(a)) {
         fila_queue(c, arena_remove(a));
     }
 

@@ -5,29 +5,27 @@
 
 #include "fila.h"
 #include "formas.h"
-#include "lerQry.h"
+#include "lerGeo.h" // onde fica o definição de chão
 #include "lista.h"
 
 
-typedef Fila Chao;
-typedef struct stArena Arena;
-typedef struct stRepositorio repositorio;
+typedef struct arena Arena;
+
+Arena *arena_create();
 
 
-Arena *criaArena();
+forma arena_add(Arena *a, forma *f);
 
 
-forma *adicionaFormaArena(Arena *a, forma *f);
+forma arena_remove(Arena *a);
+
+bool arena_isEmpty(Arena *a);
+
+void arena_destroy(Arena **a);
+
+int arena_getSize(Arena *a);
 
 
-forma *removeFormaArena(Arena *a);
-
-
-void destrutorArena(Arena **a);
-
-int getArenaNumFormas(Arena *a);
-
-
-void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_svg, FILE *arquivo_txt, int *formas_clonadas, int *formas_destruidas, Lista *repo);
+void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_svg, FILE *arquivo_txt, int *formas_clonadas, int *formas_destruidas);
 
 #endif 

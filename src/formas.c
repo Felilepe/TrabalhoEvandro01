@@ -106,7 +106,7 @@ void forma_exportarDados(forma f, FILE *file_name, char* report_QRY)
             report_safe, linha_getID(l), linha_getCoordX1(l), linha_getCoordY1(l), linha_getCoordX2(l), linha_getCoordY2(l), linha_getCor(l)); break; 
 
         case(TIPO_T): fprintf(file_name, "%s Texto\n ID: %d\n Âncora em: (%.2f, %.2f)\n Posição da Âncora: %c\n Conteúdo: \"%s\"\n Cor de borda: %s\n Cor de preenchimento: %s\n",
-            report_safe, texto_getID(t), texto_getCoordX, texto_getCoordY, texto_getAnchor, texto_getTexto, texto_getCorBorda(t), 
+            report_safe, texto_getID(t), texto_getCoordX(t), texto_getCoordY(t), texto_getAnchor(t), texto_getTexto(t), texto_getCorBorda(t), 
             texto_getCorPreench(t)); 
             fprintf(file_name, " Família da fonte: %s\n Peso da fonte: %s\n Tamanho da fonte: %s\n\n",
             texto_getFamily(t), texto_getWeight(t), texto_getSize(t)); break;

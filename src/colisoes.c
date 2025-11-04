@@ -58,7 +58,7 @@ static Linha conversaoTxtoLinha(Texto t) //Cria uma linha utilizando as coordena
     x1 = conversaoCoordTxtoLinhaX1(t);
     x2 = conversaoCoordTxtoLinhaX2(t);
     y1 = y2 = texto_getCoordY(t);
-    Linha temp = linha_create(-1, x1, y1, x2, y2, " ", false);
+    Linha temp = linha_create(-1, x1, y1, x2, y2, " ", false );
 
     return temp;
 }

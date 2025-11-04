@@ -21,9 +21,9 @@ NodeF *fila_getHead(Fila *f);
 
 NodeF *fila_getTail(Fila *f);
 
-item fila_getItem(Fila *f);
+item fila_getItem(NodeF *n);
 
-NodeF *fila_getNext(Fila *f);
+NodeF *fila_getNext(NodeF *n);
 
 void fila_destroy(Fila* f);
 
@@ -31,6 +31,6 @@ int fila_getSize(Fila *f);
 
 
 
-void fila_passthrough(Fila *f, void (*acao)(item i, item aux_data), item aux_data)
+void fila_passthrough(Fila *f, void (*acao)(item i, item aux_data), item aux_data);
 
 #endif

@@ -4,9 +4,9 @@
 #include "fila.h"
 #include "formas.h"
 #include <stdbool.h>
+#include "lerGeo.h"
 
 typedef void* Carregador;
-typedef Fila Chao;
 
 Carregador *carregador_create(int id);
 
