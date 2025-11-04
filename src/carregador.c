@@ -61,7 +61,7 @@ forma f = fila_dequeue(h);
 Chao *carregador_loadAmount(Chao *h, Carregador c, int n)
 {
     if (c == NULL || h == NULL) {
-		if(n < 0) return fila_create();
+        if(n < 0) return fila_create();
         printf("Erro: chao e/ou carregador identificado(s) como sendo nulo.\n");
         return NULL;
 	}
@@ -74,8 +74,12 @@ Chao *carregador_loadAmount(Chao *h, Carregador c, int n)
             printf("Chao foi esvaziado.\n");
             break;
         }
-        fila_queue(Historico, pilha_peek(mag ->p));
-        carregador_loadFromChao(c, h);
+        /* Carrega a forma do chao para o carregador e registre a forma carregada no historico.
+           Evita usar pilha_peek() que falharia caso a pilha estivesse vazia. */
+        forma f = carregador_loadFromChao(c, h);
+        if (f != NULL) {
+            fila_queue(Historico, f);
+        }
     }
 
     return Historico;

@@ -95,6 +95,13 @@ char texto_getAnchor(Texto t);
 ******************************************************************/
 int texto_getCharCount(Texto t);
 
+/****************************************************************************************
+ * @brief Obtém o Tipo de texto.                                                    
+ * @param t O retângulo do qual o Tipo será obtido.                                        
+ * @return Retorna o valor do Tipo (um int).                                               
+ ****************************************************************************************/
+int texto_getType(Texto t);
+
 /******************************************************************
 *@brief Calcula a "área" (comprimento * altura base) de um texto.
 *@param t O texto.

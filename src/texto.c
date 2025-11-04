@@ -130,6 +130,8 @@ char texto_getAnchor(Texto t) {return ((texto*)t)  -> a;}
 
 int texto_getCharCount(Texto t) {return strlen(((texto*)t) -> txto);}
 
+int texto_getType(Texto t) { return ((texto*)t) -> type;}
+
 double texto_calcArea(Texto t) {return 2 * calcComp(((texto*)t) -> txto);}
 
 

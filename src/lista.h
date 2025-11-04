@@ -5,7 +5,10 @@
 
 // Definimos 'item' da mesma forma que em fila.h e pilha.h
 // para consistência.
+#ifndef ITEM_T_DEFINED
 typedef void *item;
+#define ITEM_T_DEFINED
+#endif
 
 // Opaque pointer para a struct da lista
 typedef struct lista Lista;

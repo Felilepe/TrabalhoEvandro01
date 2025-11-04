@@ -47,6 +47,7 @@ int forma_getType(forma f)
     }
     int type;
 
+
     switch(forma_generica -> type){
         case(TIPO_C):type = circulo_getType((Circulo)f); break;
         case(TIPO_R):type = retangulo_getType((Retangulo)f); break;

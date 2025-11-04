@@ -3,7 +3,10 @@
 
 #include <stdbool.h>
 
+#ifndef ITEM_T_DEFINED
 typedef void *item;
+#define ITEM_T_DEFINED
+#endif
 typedef struct fila Fila;
 typedef struct node NodeF;
 

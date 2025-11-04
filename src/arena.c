@@ -28,7 +28,7 @@ Arena *arena_create()
     return a;
 }
 
-forma arena_add(Arena *a, forma *f) 
+forma arena_add(Arena *a, forma f) 
 {
     if (f == NULL) {
         return NULL;
@@ -39,7 +39,7 @@ forma arena_add(Arena *a, forma *f)
         return NULL;
     }
 
-    fila_queue(a -> filaArena, f);
+    fila_queue(a->filaArena, f);
 
     return f;
 }

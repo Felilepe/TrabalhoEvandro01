@@ -68,10 +68,10 @@ static void acao_encontrar_carregador(item i, item aux_data)
     SearchData* search = (SearchData*)aux_data;
     if (search->resultado != NULL) return; // Já encontrou
 
-    Carregador* c = (Carregador*)i;
+    Carregador c = (Carregador)i;
     // (Assumindo que o seu TAD Carregador tem esta função)
     if (carregador_getID(c) == search->id_alvo) {
-        search->resultado = c;
+        search->resultado = (void*)c;
     }
 }
 
@@ -106,9 +106,9 @@ static Disparador* encontrarOuCriarDisparador(Repositorio *repo, int id)
     return d;
 }
 
-static Carregador* encontrarOuCriarCarregador(Repositorio *repo, int id)
+static Carregador encontrarOuCriarCarregador(Repositorio *repo, int id)
 {
-    Carregador *c = (Carregador*) encontrar_item_na_lista(repo->Carregadores, id, acao_encontrar_carregador);
+    Carregador c = (Carregador) encontrar_item_na_lista(repo->Carregadores, id, acao_encontrar_carregador);
 
     if (c == NULL) {
         c = carregador_create(id); // (Assumindo que carregador_create(id) existe)
@@ -125,7 +125,7 @@ static Carregador* encontrarOuCriarCarregador(Repositorio *repo, int id)
 
 static void esvaziar_carregador_no_chao(item i, item aux_data)
 {
-    Carregador* car = (Carregador*)i;
+    Carregador car = (Carregador)i;
     Fila* chao = (Fila*)aux_data; 
     while (!carregador_isEmpty(car)) { // (Assumido)
         // CORREÇÃO: 'forma' (void*) em vez de 'forma*' (void**)
@@ -366,7 +366,7 @@ static void processar_pd(char* linha, Repositorio* repo, estatisticas* stats) {
 static void processar_lc(char* linha, Repositorio* repo, Chao* chao, FILE* arquivo_txt, estatisticas* stats) {
     int id, n;
     sscanf(linha, "lc %i %i", &id, &n);
-    Carregador *c = encontrarOuCriarCarregador(repo, id);
+    Carregador c = encontrarOuCriarCarregador(repo, id);
     if (c) {
         stats -> instrucoes_realizadas++;
         Fila *formas_carregadas = carregador_loadAmount(chao, c, n); // (Função do TAD Carregador)
@@ -381,8 +381,8 @@ static void processar_atch(char* linha, Repositorio* repo, estatisticas* stats) 
     int id1, id2, id3;
     sscanf(linha, "atch %i %i %i", &id1, &id2, &id3);
     Disparador *d = encontrarOuCriarDisparador(repo, id1); 
-    Carregador *c1 = encontrarOuCriarCarregador(repo, id2);
-    Carregador *c2 = encontrarOuCriarCarregador(repo, id3);
+    Carregador c1 = encontrarOuCriarCarregador(repo, id2);
+    Carregador c2 = encontrarOuCriarCarregador(repo, id3);
     if (d && c1 && c2) {
         disparador_attachCarregador(d, c1, c2); // (Função do TAD Disparador)
         stats -> instrucoes_realizadas++;

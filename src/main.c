@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
 
     // --- 5. Geração do SVG Inicial (Corrigido) ---
     printf("Gerando SVG inicial: %s\n", path_svg_inicial);
-    // (getFilaDoChao não é necessário, 'meu_chao' JÁ É uma Fila)
+    printf("Gerando SVG inicial: %s\n", path_svg_inicial);
     createSVG(path_svg_inicial, meu_chao);
 
     // --- 6. Execução do ProcessaQry (se aplicável) (Corrigido) ---
