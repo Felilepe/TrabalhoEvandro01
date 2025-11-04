@@ -7,13 +7,13 @@
 
 struct disparador
 {
-    Carregador *cesq, *cdir;
+    Carregador cesq, cdir;
     forma pos_lanc;
     double x, y;
     int id;
 };
 
-Disparador *disparador_create(int id, double x, double y, Carregador *cesq, Carregador *cdir) 
+Disparador *disparador_create(int id, double x, double y, Carregador cesq, Carregador cdir) 
 {
     Disparador *d = (Disparador*)malloc(sizeof(Disparador));
     if(d == NULL){
@@ -64,7 +64,7 @@ double disparador_getCoordY(Disparador *d)
     return d -> y;
 }
 
-Carregador *disparador_getCEsq(Disparador *d)
+Carregador disparador_getCEsq(Disparador *d)
 {
     if(d == NULL){
         printf("Erro: disparador nulo.");
@@ -74,7 +74,7 @@ Carregador *disparador_getCEsq(Disparador *d)
     return d -> cesq;
 }
 
-Carregador *disparador_getCDir(Disparador *d)
+Carregador disparador_getCDir(Disparador *d)
 {
     if(d == NULL){
         printf("Erro: disparador nulo.");
@@ -107,7 +107,7 @@ void disparador_posicionarDisp(Disparador *d, double x, double y)
 
 }
 
-void disparador_attachCarregador(Disparador *d, Carregador *cesq, Carregador *cdir) //atch
+void disparador_attachCarregador(Disparador *d, Carregador cesq, Carregador cdir) //atch
 {
     d -> cesq = cesq;
     d -> cdir = cdir;
@@ -119,17 +119,25 @@ item disparador_shift(Disparador *d, char b, int n) //shft
     switch (b){
     case 'e': 
         for(int i = 0; i < n; i++){
-            if(d -> pos_lanc != NULL){
+            if(d -> pos_lanc != NULL && d->cdir != NULL){
                 carregador_loadForma(d -> cdir, d -> pos_lanc);
             }
-            d -> pos_lanc = carregador_remove(d -> cesq);
+            if (d->cesq != NULL && !carregador_isEmpty(d->cesq)) {
+                d -> pos_lanc = carregador_remove(d -> cesq);
+            } else {
+                d -> pos_lanc = NULL;
+            }
         } break;
     case 'd':
         for(int i = 0; i < n; i++){
-            if(d -> pos_lanc != NULL){
+            if(d -> pos_lanc != NULL && d->cesq != NULL){
                 carregador_loadForma(d -> cesq, d ->pos_lanc);
             }
-            d -> pos_lanc = carregador_remove(d -> cdir);
+            if (d->cdir != NULL && !carregador_isEmpty(d->cdir)) {
+                d -> pos_lanc = carregador_remove(d -> cdir);
+            } else {
+                d -> pos_lanc = NULL;
+            }
         } break;
     
     default: printf("Erro: Botao %c nao e uma opcao aceita.", b);
@@ -196,25 +204,25 @@ Fila *disparador_rajada(Disparador *d, char botao, double dx, double dy, double 
 	int formas_disparadas = 0;
 
 
-	for (int i = 0; ; i++) {
+    for (int i = 0; ; i++) {
 
-		forma *formaAtual = disparador_shift(d, botao, 1);
-		if (formaAtual == NULL) {
-			break;
-		}
+        forma formaAtual = (forma)disparador_shift(d, botao, 1);
+        if (formaAtual == NULL) {
+            break;
+        }
 
-		double dx_atual = dx + (i * ix);
-		double dy_atual = dy + (i * iy);
+        double dx_atual = dx + (i * ix);
+        double dy_atual = dy + (i * iy);
 
-		forma *formaDisparada = disparador_disparar(d, dx_atual, dy_atual);
+        forma formaDisparada = disparador_disparar(d, dx_atual, dy_atual);
 
-		if (formaDisparada != NULL) {
+        if (formaDisparada != NULL) {
 
-			arena_add(a, formaDisparada);
-			fila_queue(fila_disparos, formaDisparada);
-			formas_disparadas++;
-		}
-	}
+            arena_add(a, formaDisparada);
+            fila_queue(fila_disparos, formaDisparada);
+            formas_disparadas++;
+        }
+    }
 
 	disparador_move(d, x_original, y_original);
 
