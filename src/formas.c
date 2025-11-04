@@ -115,6 +115,79 @@ void forma_exportarDados(forma f, FILE *file_name, char* report_QRY)
     }
 }
 
+forma forma_clonar(forma f) {
+    if (f == NULL) return NULL;
+
+    static int max_id = 10000;
+    int novo_id = ++max_id;
+    int tipo = forma_getType(f); // Esta função sua já está correta
+    
+    forma novo_clone = NULL;
+
+    switch (tipo) {
+        case TIPO_C: {
+            novo_clone = (forma)circulo_create(novo_id,
+                circulo_getCoordX((Circulo)f),
+                circulo_getCoordY((Circulo)f),
+                circulo_getRaio((Circulo)f),      // Precisa de circulo.h
+                circulo_getCorBorda((Circulo)f),
+                circulo_getCorPreench((Circulo)f)
+            );
+            break;
+        }
+        case TIPO_R: {
+            novo_clone = (forma)retangulo_create(novo_id,
+                retangulo_getCoordX((Retangulo)f),
+                retangulo_getCoordY((Retangulo)f),
+                retangulo_getWidth((Retangulo)f),   // Precisa de retangulo.h
+                retangulo_getHeight((Retangulo)f),  // Precisa de retangulo.h
+                retangulo_getCorBorda((Retangulo)f),
+                retangulo_getCorPreench((Retangulo)f)
+            );
+            break;
+        }
+        case TIPO_L: {
+            novo_clone = (forma)linha_create(novo_id,
+                linha_getCoordX1((Linha)f), // Precisa de linha.h
+                linha_getCoordY1((Linha)f), // Precisa de linha.h
+                linha_getCoordX2((Linha)f), // Precisa de linha.h
+                linha_getCoordY2((Linha)f), // Precisa de linha.h
+                linha_getCor((Linha)f),
+                linha_getIsDotted((Linha)f) // Precisa de linha.h
+            );
+            break;
+        }
+        case TIPO_T: {
+            // Este é o caso especial:
+            // O seu texto_create() usa o ESTILO GLOBAL (static).
+            // Queremos que o clone tenha o estilo do ORIGINAL, não o global.
+
+            // 1. Criamos o texto (ele vai apanhar o estilo global por defeito)
+            novo_clone = (forma)texto_create(novo_id,
+                texto_getCoordX((Texto)f),
+                texto_getCoordY((Texto)f),
+                texto_getCorBorda((Texto)f),
+                texto_getCorPreench((Texto)f),
+                texto_getAnchor((Texto)f), // Precisa de texto.h
+                texto_getTexto((Texto)f)   // Precisa de texto.h
+            );
+
+            // 2. Corrigimos o estilo, copiando-o do original 'f'
+            if (novo_clone != NULL) {
+                texto_setFamily(novo_clone, texto_getFamily((Texto)f));
+                texto_setWeight(novo_clone, texto_getWeight((Texto)f));
+                texto_setSize(novo_clone, texto_getSize((Texto)f));
+            }
+            break;
+        }
+        default:
+            return NULL;
+    }
+
+    // A sua função 'criaForma' não existe. O 'novo_clone' já É a nova forma.
+    return novo_clone;
+}
+
 
 
 int forma_getID(forma f)

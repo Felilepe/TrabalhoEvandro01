@@ -1,23 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "lista.h" 
+#include "lista.h"
 
+// --- Estruturas de Dados Internas (Privadas) ---
 
-
+// Usamos uma lista duplamente encadeada para remoção
+// e inserção eficiente em ambas as pontas (O(1)).
 typedef struct nodeL {
-    int id;      
-    item data;    
+    item data;          // O ponteiro void* (para a forma, etc.)
     struct nodeL *next;
+    struct nodeL *prev; // Ponteiro para o nó anterior
 } NodeL;
 
 struct lista {
-    NodeL *head;  
-    NodeL *tail;  
+    NodeL *head;  // Ponteiro para o primeiro nó
+    NodeL *tail;  // Ponteiro para o último nó
     int size;
 };
 
-
+// --- Implementação das Funções Públicas ---
 
 Lista *lista_create()
 {
@@ -38,7 +40,13 @@ bool lista_isEmpty(Lista *l)
     return l->size == 0;
 }
 
-void lista_insere(Lista *l, int id, item i)
+int lista_getSize(Lista *l)
+{
+    if(l == NULL) return 0;
+    return l->size;
+}
+
+void lista_insere_inicio(Lista *l, item i)
 {
     NodeL *novoNode = (NodeL*)malloc(sizeof(NodeL));
     if(novoNode == NULL){
@@ -46,100 +54,97 @@ void lista_insere(Lista *l, int id, item i)
         exit(1);
     }
     
-    novoNode->id = id;
     novoNode->data = i;
-    novoNode->next = NULL;
-    
+    novoNode->prev = NULL;
+    novoNode->next = l->head;
+
     if(lista_isEmpty(l)){
+        // Se a lista está vazia, head e tail são o mesmo nó
         l->head = novoNode;
         l->tail = novoNode;
     } else {
-        l->tail->next = novoNode;
-        l->tail = novoNode;
+        // Se não, o head antigo aponta 'prev' para o novo nó
+        l->head->prev = novoNode;
+        l->head = novoNode;
     }
-
     l->size++;
 }
 
-item lista_get(Lista *l, int id)
+void lista_insere_fim(Lista *l, item i)
 {
-    if (l == NULL) return NULL;
-
-    NodeL *atual = l->head;
-    
-    
-    while (atual != NULL) {
-        if (atual->id == id) {
-            return atual->data;
-        }
-        atual = atual->next;
+    NodeL *novoNode = (NodeL*)malloc(sizeof(NodeL));
+    if(novoNode == NULL){
+        printf("Erro na alocacao de memoria ao criar novo no para lista.");
+        exit(1);
     }
     
-    return NULL;
+    novoNode->data = i;
+    novoNode->next = NULL;
+    novoNode->prev = l->tail;
+
+    if(lista_isEmpty(l)){
+        // Se a lista está vazia, head e tail são o mesmo nó
+        l->head = novoNode;
+        l->tail = novoNode;
+    } else {
+        // Se não, o tail antigo aponta 'next' para o novo nó
+        l->tail->next = novoNode;
+        l->tail = novoNode;
+    }
+    l->size++;
 }
 
-item lista_remove(Lista *l, int id)
+item lista_remove_inicio(Lista *l)
 {
-    if (l == NULL || lista_isEmpty(l)) return NULL;
-
-    NodeL *atual = l->head;
-    NodeL *anterior = NULL;
-
-    while (atual != NULL && atual->id != id) {
-        anterior = atual;
-        atual = atual->next;
+    if(lista_isEmpty(l)){
+        printf("Erro: Tentativa de remocao de lista vazia.");
+        exit(1);
     }
 
-    // 2. Se não encontrou, retorna NULL
-    if (atual == NULL) {
-        return NULL;
-    }
+    NodeL *nodeRemover = l->head;
+    item itemRetornar = nodeRemover->data;
     
-    item dataToReturn = atual->data;
-
-    // 3. Re-conecta os ponteiros da lista
-    if (anterior == NULL) {
-        // Caso 1: Removendo a cabeça (head)
-        l->head = atual->next;
-    } else {
-        // Caso 2: Removendo do meio ou fim
-        anterior->next = atual->next;
-    }
-
-    // 4. Se removeu a cauda (tail), atualiza a cauda
-    if (l->head == NULL || atual->next == NULL) {
-        l->tail = anterior; // Se anterior for NULL, tail vira NULL (lista vazia)
-    }
-
-    // 5. Libera o nó (mas não o 'data') e atualiza o tamanho
-    free(atual);
+    l->head = nodeRemover->next; // O novo head é o próximo
     l->size--;
 
-    return dataToReturn;
-}
-
-int lista_getSize(Lista *l)
-{
-    if(l == NULL) return 0;
-    return l->size;
-}
-
-void lista_destroy(Lista* l)
-{
-    NodeL *atual = l->head;
-    
-    
-    while(atual != NULL){
-        NodeL *temp = atual;
-        atual = atual->next;
-        free(temp); 
+    if(lista_isEmpty(l)){
+        // Se a lista ficou vazia, tail também é NULL
+        l->tail = NULL;
+    } else {
+        // Se não, o novo head não tem 'prev'
+        l->head->prev = NULL;
     }
     
-    
-    free(l);
+    free(nodeRemover);
+    return itemRetornar;
 }
 
-void lista_passthrough(Lista *l, void (*acao)(int id, item i, item aux_data), item aux_data)
+item lista_remove_fim(Lista *l)
+{
+    if(lista_isEmpty(l)){
+        printf("Erro: Tentativa de remocao de lista vazia.");
+        exit(1);
+    }
+
+    NodeL *nodeRemover = l->tail;
+    item itemRetornar = nodeRemover->data;
+    
+    l->tail = nodeRemover->prev; // O novo tail é o anterior
+    l->size--;
+
+    if(lista_isEmpty(l)){
+        // Se a lista ficou vazia, head também é NULL
+        l->head = NULL;
+    } else {
+        // Se não, o novo tail não tem 'next'
+        l->tail->next = NULL;
+    }
+    
+    free(nodeRemover);
+    return itemRetornar;
+}
+
+void lista_passthrough(Lista *l, void (*acao)(item i, item aux_data), item aux_data)
 {
     if (l == NULL || acao == NULL || lista_isEmpty(l)) {
         return;
@@ -148,7 +153,24 @@ void lista_passthrough(Lista *l, void (*acao)(int id, item i, item aux_data), it
     NodeL *atual = l->head;
 
     while (atual != NULL) {
-        acao(atual->id, atual->data, aux_data);
+        acao(atual->data, aux_data);
         atual = atual->next;
     }
+}
+
+void lista_destroy(Lista *l)
+{
+    if (l == NULL) return;
+
+    NodeL *atual = l->head;
+    
+    // Libera todos os nós
+    while(atual != NULL){
+        NodeL *temp = atual;
+        atual = atual->next;
+        free(temp); // Libera apenas o nó, não o 'data' (consistente com fila/pilha)
+    }
+    
+    // Libera a struct da lista
+    free(l);
 }

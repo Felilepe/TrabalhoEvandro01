@@ -21,15 +21,12 @@ static char *default_fSize = NULL;
 
 static void inicializarDefault()
 {
-    free(default_fFamily);
     default_fFamily = (char*)malloc(strlen("Arial") + 1);
     strcpy(default_fFamily, "Arial");
 
-    free(default_fWeight);
     default_fWeight = (char*)malloc(strlen("n") + 1);
     strcpy(default_fWeight,"n");
 
-    free(default_fSize);
     default_fSize = (char*)malloc(strlen("12") + 1);
     strcpy(default_fSize, "12");
 }
@@ -143,16 +140,16 @@ void texto_setNewDefault(char *fFamily, char *fWeight, char* fSize)
         inicializarDefault();
     }
 
-
     free(default_fFamily);
+    free(default_fWeight);
+    free(default_fSize);
+
     default_fFamily = (char*)malloc(strlen(fFamily) + 1);
     strcpy(default_fFamily, fFamily);
 
-    free(default_fWeight);
     default_fWeight = (char*)malloc(strlen(fWeight) + 1);
     strcpy(default_fWeight, fWeight);
 
-    free(default_fSize);
     default_fSize = (char*)malloc(strlen(fSize) + 1);
     strcpy(default_fSize, fSize);
 }

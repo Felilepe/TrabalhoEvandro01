@@ -32,7 +32,7 @@ double texto_calcArea(Texto t);
 
 
 
-void texto_setNewDefault(char* fFamily, char* fWeight, char* fSize);
+void texto_setNewStyle(char* fFamily, char* fWeight, char* fSize);
 
 void texto_setCoordX(Texto t, double x);
 

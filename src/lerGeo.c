@@ -129,7 +129,7 @@
             return NULL;
         }
 
-        Chao *meuChao = criaChao();
+        Chao *meuChao = fila_create();
         if (meuChao == NULL) {
             fclose(arquivo_geo);
             return NULL;
