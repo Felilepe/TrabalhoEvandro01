@@ -9,7 +9,10 @@
 
 typedef struct disparador Disparador;
 
+#ifndef ITEM_T_DEFINED
 typedef void* item;
+#define ITEM_T_DEFINED
+#endif
 
 /******************************************************************
 *@brief Cria um novo Disparador (jogador).
@@ -20,7 +23,7 @@ typedef void* item;
 *@param cdir O Carregador direito (pode ser NULL).
 *@return Um ponteiro para o Disparador recém-criado.
 ******************************************************************/
-Disparador *disparador_create(int id, double x, double y, Carregador *cesq, Carregador *cdir); 
+Disparador *disparador_create(int id, double x, double y, Carregador cesq, Carregador cdir); 
 
 
 /******************************************************************
@@ -49,14 +52,14 @@ double disparador_getCoordY(Disparador *d);
 *@param d O Disparador.
 *@return O Carregador Direito. NULL se não houver
 ******************************************************************/
-Carregador *disparador_getCDir(Disparador *d);
+Carregador disparador_getCDir(Disparador *d);
 
 /******************************************************************
 *@brief Obtém o carregador esquerdo atual do Disparador.
 *@param d O Disparador.
 *@return O Carregador Esquerdo. NULL não houver
 ******************************************************************/
-Carregador *disparador_getCEsq(Disparador *d);
+Carregador disparador_getCEsq(Disparador *d);
 
 /******************************************************************
 *@brief Obtém a forma de disparo atual do Disparador.
@@ -102,7 +105,7 @@ void disparador_move(Disparador *d, double x, double y);
 *@param cesq O Carregador esquerdo.
 *@param cdir O Carregador direito.
 ******************************************************************/
-void disparador_attachCarregador(Disparador *d, Carregador *cesq, Carregador *cdir);
+void disparador_attachCarregador(Disparador *d, Carregador cesq, Carregador cdir);
 
 /******************************************************************
 *@brief Movimenta formas entre os carregadores e a posição de disparo (shft).
