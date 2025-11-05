@@ -64,10 +64,13 @@ int arena_getSize(Arena *a);
 ******************************************************************/
 void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_svg, FILE *arquivo_txt, int *formas_clonadas, int *formas_destruidas);
 
-/*
- * Itera sobre as formas atualmente na arena, executando a função fornecida
- * para cada forma. Útil para criar anotações/inspeções sem remover itens.
- */
+/*****************************************************************************
+*@brief Percorre a arena e executa uma função 'acao' para cada item.
+* (Modelado a partir de fila_passthrough)
+*@param l Ponteiro para a lista.
+*@param acao A função de callback a ser executada em cada item.
+*@param aux_data Um ponteiro auxiliar para ser passado para a função 'acao'.
+*****************************************************************************/
 void arena_passthrough(Arena *a, void (*acao)(item i, item aux_data), item aux_data);
 
 #endif
