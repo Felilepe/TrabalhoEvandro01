@@ -11,25 +11,57 @@
 
 typedef struct arena Arena;
 
-/* Cria e inicializa uma nova Arena (fila de combate). */
+/******************************************************************
+*@brief Cria e inicializa uma nova Arena (fila de combate).
+*@return Um ponteiro para a Arena recém-criada.
+******************************************************************/
 Arena *arena_create();
 
-/* Adiciona uma forma (opaca) à fila da Arena. Retorna a forma adicionada. */
+/******************************************************************
+*@brief Adiciona uma forma à fila da Arena.
+*@param a Ponteiro para a Arena.
+*@param f Ponteiro para a forma a ser adicionada (tipo 'forma *f').
+*@return Retorna um ponteiro para a forma adicionada, ou NULL se falhar.
+******************************************************************/
 forma arena_add(Arena *a, forma f);
 
-/* Remove e retorna a próxima forma da fila da Arena. */
+/******************************************************************
+*@brief Remove e retorna a próxima forma da fila da Arena.
+*@param a Ponteiro para a Arena.
+*@return Retorna a forma (void*) removida.
+******************************************************************/
 forma arena_remove(Arena *a);
 
-/* Verifica se a Arena está vazia. */
+/******************************************************************
+*@brief Verifica se a Arena está vazia.
+*@param a Ponteiro para a Arena.
+*@return True se a Arena estiver vazia, caso contrário False.
+******************************************************************/
 bool arena_isEmpty(Arena *a);
 
-/* Libera toda a memória associada à Arena (recebe ponteiro para ponteiro). */
+/******************************************************************
+*@brief Libera toda a memória associada à Arena.
+*@param a Ponteiro para o ponteiro da Arena (Arena **a) para zerá-lo.
+******************************************************************/
 void arena_destroy(Arena **a);
 
-/* Obtém o número de formas atualmente na Arena. */
+/******************************************************************
+*@brief Obtém o número de formas atualmente na Arena.
+*@param a Ponteiro para a Arena.
+*@return O número de formas (int) na Arena.
+******************************************************************/
 int arena_getSize(Arena *a);
 
-/* Processa um "round" de combate na Arena. */
+/******************************************************************
+*@brief Processa um "round" de combate na Arena.
+*@param a Ponteiro para a Arena.
+*@param c Ponteiro para o Chao (onde as formas terminam).
+*@param pontuacao_total Ponteiro para a pontuação global do jogo.
+*@param anotacoes_svg Fila para registrar anotações visuais (SVG).
+*@param arquivo_txt Handle do arquivo de log (.txt).
+*@param formas_clonadas Ponteiro para o contador de formas clonadas.
+*@param formas_destruidas Ponteiro para o contador de formas destruídas.
+******************************************************************/
 void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_svg, FILE *arquivo_txt, int *formas_clonadas, int *formas_destruidas);
 
 #endif
