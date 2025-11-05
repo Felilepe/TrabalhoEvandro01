@@ -93,7 +93,6 @@ void svg_insertForma(FILE *file_name, forma f)
 void draw(item i, item aux)
 {
     FILE* svg = (FILE*)aux;
-    /* Chamada correta: primeiro FILE*, depois a forma opaca */
     svg_insertForma(svg, (forma)i);
 }
 

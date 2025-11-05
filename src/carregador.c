@@ -74,8 +74,7 @@ Chao *carregador_loadAmount(Chao *h, Carregador c, int n)
             printf("Chao foi esvaziado.\n");
             break;
         }
-        /* Carrega a forma do chao para o carregador e registre a forma carregada no historico.
-           Evita usar pilha_peek() que falharia caso a pilha estivesse vazia. */
+
         forma f = carregador_loadFromChao(c, h);
         if (f != NULL) {
             fila_queue(Historico, f);

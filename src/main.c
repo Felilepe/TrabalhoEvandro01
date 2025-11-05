@@ -1,17 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 
-// --- Includes Corrigidos ---
 #include "fila.h"
-#include "lerGeo.h"       // (Contém a definição de 'Chao')
-#include "arena.h"        // (Assumindo que este TAD existe)
-#include "lerQry.h"       // (O TAD que usa Repositorio com Lista sem ID)
+#include "lerGeo.h"      
+#include "arena.h"        
+#include "lerQry.h"      
 #include "svg.h"
-#include "formas.h"       // (Necessário para o tipo 'forma')
+#include "formas.h"       
 
-/*
- * Função auxiliar para montar caminhos, como no seu original.
- */
+
 static void montaCaminho(char* path_completo, const char* base_dir, const char* nome_arquivo) {
     if (base_dir != NULL && strlen(base_dir) > 0) {
         sprintf(path_completo, "%s/%s", base_dir, nome_arquivo);
@@ -22,7 +19,6 @@ static void montaCaminho(char* path_completo, const char* base_dir, const char* 
 
 int main(int argc, char *argv[]){
 
-    // --- 1. Processamento dos Parâmetros da Linha de Comando (O seu código está correto) ---
     char* dir_entrada = NULL;
     char* arq_geo_nome = NULL;
     char* dir_saida = NULL;
@@ -46,7 +42,6 @@ int main(int argc, char *argv[]){
         return 1;
     }
 
-    // --- 2. Montagem dos Nomes e Caminhos dos Arquivos (O seu código está correto) ---
     char path_geo_completo[512];
     montaCaminho(path_geo_completo, dir_entrada, arq_geo_nome);
 
@@ -59,34 +54,27 @@ int main(int argc, char *argv[]){
     char path_svg_inicial[512];
     sprintf(path_svg_inicial, "%s/%s.svg", dir_saida, nome_base_geo);
 
-    // --- 3. Inicialização das Estruturas de Dados (Corrigido) ---
-    Arena* minha_arena = arena_create();       // (Assumindo arena_create existe)
-    Repositorio* repo = criarRepositorio();  // (De lerQry.h)
-    Fila* anotacoes_svg = fila_create();       // (De fila.h)
+    Arena* minha_arena = arena_create();       
+    Repositorio* repo = criarRepositorio();  
+    Fila* anotacoes_svg = fila_create();       
     double pontuacao = 0.0;
     int formas_clonadas = 0, formas_esmagadas = 0;
 
-    // --- 4. Execução do ProcessaGeo ---
-    // (lerGeo.h define: typedef Fila Chao;)
-    // (NOTA: O seu lerGeo.h DEVE ter a linha: #define criaChao fila_create)
     Chao *meu_chao = processaGeo(path_geo_completo);
     printf("Lendo o arquivo .geo e adicionando as formas ao chão...\n");
 
     if (meu_chao == NULL) {
         fprintf(stderr,"Falha critica ao processar o .geo (%s)\n", path_geo_completo);
-        // (Corrigindo nomes de destrutores)
-        arena_destroy(&minha_arena);     // (Assumindo arena_destroy)
+        arena_destroy(&minha_arena);    
         destrutorRepositorio(repo);
-        fila_destroy(anotacoes_svg);    // (De fila.h)
+        fila_destroy(anotacoes_svg);    
         return 1;
     }
 
-    // --- 5. Geração do SVG Inicial (Corrigido) ---
     printf("Gerando SVG inicial: %s\n", path_svg_inicial);
     printf("Gerando SVG inicial: %s\n", path_svg_inicial);
     createSVG(path_svg_inicial, meu_chao);
 
-    // --- 6. Execução do ProcessaQry (se aplicável) (Corrigido) ---
     if (arq_qry_nome != NULL) {
         char path_qry_completo[512];
         montaCaminho(path_qry_completo, dir_entrada, arq_qry_nome);
@@ -108,12 +96,9 @@ int main(int argc, char *argv[]){
                       &formas_clonadas, &formas_esmagadas);
 
 
-        // (Corrigindo o loop de anotações)
         while (!fila_isEmpty(anotacoes_svg)) {
-            // CORREÇÃO CRÍTICA: 'forma' (void*) em vez de 'forma*' (void**)
             forma anotacao = fila_dequeue(anotacoes_svg);
             
-            // CORREÇÃO: 'meu_chao' é uma Fila, use fila_queue
             fila_queue(meu_chao, anotacao);
         }
 
@@ -122,15 +107,13 @@ int main(int argc, char *argv[]){
     }
 
 
-    // --- 7. Liberação de Toda a Memória (Corrigido) ---
     printf("Finalizando e liberando memória...\n");
     devolveFormasCarregadoresParaChao(repo, meu_chao);
     devolveFormasDisparadoresParaChao(repo, meu_chao);
     destrutorRepositorio(repo);
     
-    // (destrutorChao é fila_destroy, pois Chao é uma Fila)
     fila_destroy(meu_chao);
-    arena_destroy(&minha_arena); // (Assumindo arena_destroy)
+    arena_destroy(&minha_arena); 
     fila_destroy(anotacoes_svg);
     printf("Programa finalizado com sucesso.\n");
 

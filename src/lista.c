@@ -3,23 +3,20 @@
 #include <stdbool.h>
 #include "lista.h"
 
-// --- Estruturas de Dados Internas (Privadas) ---
 
-// Usamos uma lista duplamente encadeada para remoção
-// e inserção eficiente em ambas as pontas (O(1)).
-typedef struct nodeL {
-    item data;          // O ponteiro void* (para a forma, etc.)
+typedef struct nodeL 
+{
+    item data;         
     struct nodeL *next;
-    struct nodeL *prev; // Ponteiro para o nó anterior
+    struct nodeL *prev; 
 } NodeL;
 
 struct lista {
-    NodeL *head;  // Ponteiro para o primeiro nó
-    NodeL *tail;  // Ponteiro para o último nó
+    NodeL *head;  
+    NodeL *tail;  
     int size;
 };
 
-// --- Implementação das Funções Públicas ---
 
 Lista *lista_create()
 {
@@ -59,11 +56,9 @@ void lista_insere_inicio(Lista *l, item i)
     novoNode->next = l->head;
 
     if(lista_isEmpty(l)){
-        // Se a lista está vazia, head e tail são o mesmo nó
         l->head = novoNode;
         l->tail = novoNode;
     } else {
-        // Se não, o head antigo aponta 'prev' para o novo nó
         l->head->prev = novoNode;
         l->head = novoNode;
     }
@@ -83,11 +78,9 @@ void lista_insere_fim(Lista *l, item i)
     novoNode->prev = l->tail;
 
     if(lista_isEmpty(l)){
-        // Se a lista está vazia, head e tail são o mesmo nó
         l->head = novoNode;
         l->tail = novoNode;
     } else {
-        // Se não, o tail antigo aponta 'next' para o novo nó
         l->tail->next = novoNode;
         l->tail = novoNode;
     }
@@ -104,14 +97,12 @@ item lista_remove_inicio(Lista *l)
     NodeL *nodeRemover = l->head;
     item itemRetornar = nodeRemover->data;
     
-    l->head = nodeRemover->next; // O novo head é o próximo
+    l->head = nodeRemover->next; 
     l->size--;
 
     if(lista_isEmpty(l)){
-        // Se a lista ficou vazia, tail também é NULL
         l->tail = NULL;
     } else {
-        // Se não, o novo head não tem 'prev'
         l->head->prev = NULL;
     }
     
@@ -129,14 +120,12 @@ item lista_remove_fim(Lista *l)
     NodeL *nodeRemover = l->tail;
     item itemRetornar = nodeRemover->data;
     
-    l->tail = nodeRemover->prev; // O novo tail é o anterior
+    l->tail = nodeRemover->prev; 
     l->size--;
 
     if(lista_isEmpty(l)){
-        // Se a lista ficou vazia, head também é NULL
         l->head = NULL;
     } else {
-        // Se não, o novo tail não tem 'next'
         l->tail->next = NULL;
     }
     
@@ -164,13 +153,11 @@ void lista_destroy(Lista *l)
 
     NodeL *atual = l->head;
     
-    // Libera todos os nós
     while(atual != NULL){
         NodeL *temp = atual;
         atual = atual->next;
-        free(temp); // Libera apenas o nó, não o 'data' (consistente com fila/pilha)
+        free(temp); 
     }
     
-    // Libera a struct da lista
     free(l);
 }

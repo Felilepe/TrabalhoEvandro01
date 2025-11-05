@@ -129,7 +129,8 @@ void fila_destroy(Fila* f)
 
 
 
-void fila_passthrough(Fila *f, void (*acao)(item i, item aux_data), item aux_data) {
+void fila_passthrough(Fila *f, void (*acao)(item i, item aux_data), item aux_data) 
+{
 	if (f == NULL || acao == NULL || fila_isEmpty(f)) {
 		return;
 	}

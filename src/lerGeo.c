@@ -18,7 +18,8 @@
     #define STYLE_WEIGHT_SIZE 16
     #define STYLE_SIZE_SIZE 16
 
-    static void geo_extrairTexto(const char* Linha_buffer, int offset, char* conteudo_Texto, size_t tamanho_max) {
+    static void geo_extrairTexto(const char* Linha_buffer, int offset, char* conteudo_Texto, size_t tamanho_max) 
+    {
         if (offset <= 0) {
             conteudo_Texto[0] = '\0';
             return;
@@ -35,7 +36,8 @@
     }
 
 
-    static void geo_processarCirc(const char* Linha, Chao* meuChao) {
+    static void geo_processarCirc(const char* Linha, Chao* meuChao) 
+    {
         int id;
         double x, y, r;
         char corb[COR_SIZE] = "", corp[COR_SIZE] = "";
@@ -47,7 +49,8 @@
         fila_queue(meuChao, c);
     }
 
-    static void geo_processarRet(const char* Linha, Chao* meuChao) {
+    static void geo_processarRet(const char* Linha, Chao* meuChao) 
+    {
         int id;
         double x, y, w, h;
         char corb[COR_SIZE] = "", corp[COR_SIZE] = "";
@@ -59,7 +62,8 @@
         fila_queue(meuChao, r);
     }
 
-    static void geo_processarLinha(const char* Linha_buffer, Chao* meuChao) {
+    static void geo_processarLinha(const char* Linha_buffer, Chao* meuChao) 
+    {
         int id;
         double x1, y1, x2, y2;
         char cor[COR_SIZE] = "";
@@ -71,7 +75,8 @@
         fila_queue(meuChao, l);
     }
 
-    static void geo_processarTxto(const char* Linha_buffer, Chao* meuChao) {
+    static void geo_processarTxto(const char* Linha_buffer, Chao* meuChao) 
+    {
         int id;
         double x, y;
         char corp[COR_SIZE] = "", corb[COR_SIZE] = "";
@@ -90,7 +95,8 @@
         }
     }
 
-    static void processar_estilo_Texto(const char* Linha) {
+    static void processar_estilo_Texto(const char* Linha) 
+    {
         char familia[STYLE_FAMILY_SIZE];
         char peso[STYLE_WEIGHT_SIZE];
         char tamanho[STYLE_SIZE_SIZE];
@@ -123,7 +129,8 @@
     }
 
 
-    Chao* processaGeo(const char *nome_path_geo) {
+    Chao* processaGeo(const char *nome_path_geo) 
+    {
         FILE *arquivo_geo = fopen(nome_path_geo, "r");
         if (arquivo_geo == NULL) {
             perror("Erro ao abrir o arquivo .geo");
