@@ -86,18 +86,15 @@
 
         int num_lidos = sscanf(Linha_buffer, "t %i %lf %lf %s %s %c %n", &id, &x, &y, corb, corp, &ancora, &offset);
 
-        /* Ensure we read at least id,x,y,corb,corp. Anchor is optional in some files;
-           if it's missing or invalid, default to 'i'. Also compute a fallback offset
-           to the textual content when %n wasn't set by sscanf. */
-        if (num_lidos < 5) return; /* malformed line */
+
+        if (num_lidos < 5) return; 
 
         if (!(ancora == 'i' || ancora == 'm' || ancora == 'f')) {
             ancora = 'i';
         }
 
         if (offset == 0) {
-            /* Fallback: find the first occurrence of the corp token and assume
-               text starts after it (skip whitespace). */
+
             char *pos = strstr(Linha_buffer, corp);
             if (pos != NULL) {
                 pos += strlen(corp);

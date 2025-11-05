@@ -468,82 +468,79 @@ static void processar_rjd(char* linha, Repositorio* repo, Arena* arena,
     }
 }
 
-static void processar_calc(Repositorio* repo, Arena* arena, Chao* chao,
-                           FILE* arquivo_txt, Fila* filaSVG, estatisticas* stats) {
-    stats->instrucoes_realizadas++;
-    /* Before running the collision simulation, create "antes-calc" visual
-     * annotations for each forma currently in the arena so the final SVG
-     * includes the same kind of pre-calc overlays present in the gabarito.
-     */
-    if (arena != NULL && filaSVG != NULL) {
-        /* callback that creates annotation shapes for a single forma */
-        void acao_criar_anotacao(item i, item aux) {
-            Fila* fila = (Fila*)aux;
-            if (i == NULL || fila == NULL) return;
+static void acao_criar_anotacao(item i, item aux) {
+    Fila* fila = (Fila*)aux;
+    if (i == NULL || fila == NULL) return;
 
-            forma f = (forma)i;
-            int tipo = forma_getType(f);
-            double x = forma_getCoordX(f);
-            double y = forma_getCoordY(f);
+    forma f = (forma)i;
+    int tipo = forma_getType(f);
+    double x = forma_getCoordX(f);
+    double y = forma_getCoordY(f);
 
-            switch (tipo) {
-                case TIPO_R: {
-                    Retangulo r = (Retangulo)f;
-                    double w = retangulo_getWidth(r);
-                    double h = retangulo_getHeight(r);
-                    char *corb = retangulo_getCorBorda(r);
-                    char *corp = retangulo_getCorPreench(r);
-                    /* create rect annotation (semi-transparent) */
-                    Retangulo r_ann = retangulo_create(-1, x, y, w, h, corb, corp);
-                    fila_queue(fila, (forma)r_ann);
-                    /* small red anchor circle */
-                    Circulo c_ann = circulo_create(-1, x, y, 2.0, "black", "red");
-                    fila_queue(fila, (forma)c_ann);
-                    break;
-                }
-                case TIPO_C: {
-                    Circulo c = (Circulo)f;
-                    double rrad = circulo_getRaio(c);
-                    char* corb = circulo_getCorBorda(c);
-                    char* corp = circulo_getCorPreench(c);
-                    Circulo c_ann = circulo_create(-1, x, y, rrad, corb, corp);
-                    fila_queue(fila, (forma)c_ann);
-                    Circulo anchor = circulo_create(-1, x, y, 2.0, "black", "red");
-                    fila_queue(fila, (forma)anchor);
-                    break;
-                }
-                case TIPO_L: {
-                    Linha l = (Linha)f;
-                    double x2 = linha_getCoordX2(l);
-                    double y2 = linha_getCoordY2(l);
-                    char* cor = linha_getCor(l);
-                    Linha l_ann = linha_create(-1, x, y, x2, y2, cor, true);
-                    fila_queue(fila, (forma)l_ann);
-                    Circulo anchor = circulo_create(-1, x, y, 2.0, "black", "red");
-                    fila_queue(fila, (forma)anchor);
-                    break;
-                }
-                case TIPO_T: {
-                    Texto t = (Texto)f;
-                    char *txt = texto_getTexto(t);
-                    char *corb = texto_getCorBorda(t);
-                    char *corp = texto_getCorPreench(t);
-                    char anc = texto_getAnchor(t);
-                    Texto t_ann = texto_create(-1, x, y, corb, corp, anc, txt);
-                    texto_setFamily(t_ann, texto_getFamily(t));
-                    texto_setWeight(t_ann, texto_getWeight(t));
-                    texto_setSize(t_ann, texto_getSize(t));
-                    fila_queue(fila, (forma)t_ann);
-                    Circulo anchor = circulo_create(-1, x, y, 2.0, "black", "red");
-                    fila_queue(fila, (forma)anchor);
-                    break;
-                }
-                default:
-                    break;
-            }
+    switch (tipo) {
+        case TIPO_R: {
+            Retangulo r = (Retangulo)f;
+            double w = retangulo_getWidth(r);
+            double h = retangulo_getHeight(r);
+            char *corb = retangulo_getCorBorda(r);
+            char *corp = retangulo_getCorPreench(r);
+            /* create rect annotation (semi-transparent) */
+            Retangulo r_ann = retangulo_create(-1, x, y, w, h, corb, corp);
+            fila_queue(fila, (forma)r_ann);
+            /* small red anchor circle */
+            Circulo c_ann = circulo_create(-1, x, y, 2.0, "black", "red");
+            fila_queue(fila, (forma)c_ann);
+            break;
         }
+        case TIPO_C: {
+            Circulo c = (Circulo)f;
+            double rrad = circulo_getRaio(c);
+            char* corb = circulo_getCorBorda(c);
+            char* corp = circulo_getCorPreench(c);
+            Circulo c_ann = circulo_create(-1, x, y, rrad, corb, corp);
+            fila_queue(fila, (forma)c_ann);
+            Circulo anchor = circulo_create(-1, x, y, 2.0, "black", "red");
+            fila_queue(fila, (forma)anchor);
+            break;
+        }
+        case TIPO_L: {
+            Linha l = (Linha)f;
+            double x2 = linha_getCoordX2(l);
+            double y2 = linha_getCoordY2(l);
+            char* cor = linha_getCor(l);
+            Linha l_ann = linha_create(-1, x, y, x2, y2, cor, true);
+            fila_queue(fila, (forma)l_ann);
+            Circulo anchor = circulo_create(-1, x, y, 2.0, "black", "red");
+            fila_queue(fila, (forma)anchor);
+            break;
+        }
+        case TIPO_T: {
+            Texto t = (Texto)f;
+            char *txt = texto_getTexto(t);
+            char *corb = texto_getCorBorda(t);
+            char *corp = texto_getCorPreench(t);
+            char anc = texto_getAnchor(t);
+            Texto t_ann = texto_create(-1, x, y, corb, corp, anc, txt);
+            texto_setFamily(t_ann, texto_getFamily(t));
+            texto_setWeight(t_ann, texto_getWeight(t));
+            texto_setSize(t_ann, texto_getSize(t));
+            fila_queue(fila, (forma)t_ann);
+            Circulo anchor = circulo_create(-1, x, y, 2.0, "black", "red");
+            fila_queue(fila, (forma)anchor);
+            break;
+        }
+        default:
+            break;
+    }
+}
 
-        /* iterate arena and produce annotations */
+static void processar_calc(Repositorio* repo, Arena* arena, Chao* chao,
+                           FILE* arquivo_txt, Fila* filaSVG, estatisticas* stats) 
+{
+    stats->instrucoes_realizadas++;
+
+    if (arena != NULL && filaSVG != NULL) {
+
         arena_passthrough(arena, acao_criar_anotacao, (item)filaSVG);
     }
 

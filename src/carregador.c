@@ -55,14 +55,11 @@ forma carregador_loadFromChao(Carregador c, Chao *h)
         return NULL;
     }
 
-    /* Dequeue the first item from the Chao and move it into the carregador.
-       The expected semantics of 'lc' is to transfer items from the ground
-       into the carregador (consuming the chao). */
+
     item original = fila_dequeue(h);
     if (original == NULL) return NULL;
 
     forma f = (forma)original;
-    /* Diagnostic: report the id moved from chao into the carregador */
     printf("[DIAG] carregador %d: moveu forma id=%d do chao para o carregador\n", carregador_getID(c), forma_getID(f));
 
     carregador_loadForma(c, f);

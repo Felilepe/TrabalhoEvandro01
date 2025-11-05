@@ -204,6 +204,5 @@ void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_s
 void arena_passthrough(Arena *a, void (*acao)(item i, item aux_data), item aux_data) {
     if (a == NULL) return;
     if (acao == NULL) return;
-    /* delegate to fila_passthrough on the internal queue */
     fila_passthrough(a->filaArena, acao, aux_data);
 }

@@ -22,9 +22,7 @@ FILE* startSVG(const char* file_path) {
      fprintf(svg, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
      fprintf(svg, "<svg xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"1000\" height=\"1000\">\n");
 
-     /* Do not emit <defs> or <g id="result"> here. Those will be populated
-         later by createSVG so we can place the <defs> block after the main
-         figure content to better match the gabarito structure. */
+ 
 
 	return svg;
 }
@@ -33,9 +31,7 @@ void stopSVG(FILE *file_name)
 {
     if (file_name == NULL) return;
 
-    /* Close the SVG document. createSVG is responsible for closing any
-       opened groups (like <g id="fig">) and for emitting the <defs>
-       block before this call. */
+
     fprintf(file_name, "</svg>\n");
 
     fclose(file_name);
@@ -58,8 +54,14 @@ void svg_insertRetangulo(FILE *file_name, Retangulo r)
 
 void svg_insertLinha(FILE *file_name, Linha l)
 {
-    fprintf(file_name, "\t<line id=\"%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" stroke-dasharray=\"1, 1\" stroke-width=\"%lf\" />\n",
+    if(linha_getIsDotted(l)){
+        fprintf(file_name, "\t<line id=\"%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" stroke-dasharray=\"1, 1\" stroke-width=\"%lf\" />\n",
         linha_getID(l), linha_getCoordX1(l), linha_getCoordY1(l), linha_getCoordX2(l), linha_getCoordY2(l), linha_getCor(l), DEFAULT_WIDTH);
+    }
+    else{
+        fprintf(file_name, "\t<line id=\"%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" stroke-width=\"%lf\" />\n",
+			getIDLinha(l), linha_getID(l), linha_getCoordX1(l), linha_getCoordY1(l), linha_getCoordX2(l), linha_getCoordY2(l), linha_getCor(l), DEFAULT_WIDTH);
+    }
 }
 
 void svg_insertTexto(FILE *file_name, Texto t)
@@ -119,9 +121,7 @@ void createSVG(char *file_name, Fila *formas)
         exit(1);
     }
 
-     /* emit a <use> referencing the companion "-v.svg" visual file so output
-         includes the same use element the gabarito files have. Derive base name
-         from file_name (strip path and extension). */
+
     char base[256];
     const char* last_slash = strrchr(file_name, '/');
     const char* fname = last_slash ? last_slash + 1 : file_name;
@@ -130,13 +130,8 @@ void createSVG(char *file_name, Fila *formas)
     char *dot = strrchr(base, '.');
     if (dot) *dot = '\0';
      fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
-     /* Some gabarito files include two <use> entries; emit a second one to match their structure */
      fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
 
-     /* First pass: print any annotation shapes that were created with negative IDs
-         (the code that generates arena-antes-calc and anchor markers uses -1 as ID).
-         Emit these using the arena-antes-calc id naming scheme so the output contains
-         the extra rect/line/circle/text primitives present in the gabarito. */
     NodeF *node = NULL;
     if (formas != NULL && fila_getSize(formas) > 0) {
         node = fila_getHead(formas);
@@ -144,7 +139,6 @@ void createSVG(char *file_name, Fila *formas)
         while (node != NULL) {
             forma f = (forma)fila_getItem(node);
             if (f != NULL && forma_getID(f) < 0) {
-                /* annotation shape: print here with arena-antes-calc id */
                 ann_idx++;
                 switch (forma_getType(f)) {
                     case TIPO_R: {
@@ -193,7 +187,6 @@ void createSVG(char *file_name, Fila *formas)
         }
     }
 
-    /* Second pass: emit the normal (non-annotation) shapes into the fig group */
     fprintf(svg, "<g id=\"fig\">\n");
     if (formas != NULL && fila_getSize(formas) > 0) {
         node = fila_getHead(formas);
@@ -207,11 +200,7 @@ void createSVG(char *file_name, Fila *formas)
     }
     fprintf(svg, "</g>\n");
 
-    /* Now populate <defs><g id="result"> with selected result shapes. The
-       original gabarito places several overlay/result elements inside defs
-       and references them later via <use xlink:href="#result" />. We'll
-       collect shapes with IDs in the range 41..54 and write them into the
-       result group using ids similar to the gabarito (ln*, rt*, cc*, txt*). */
+  
     fprintf(svg, "<defs>\n<g id=\"result\">\n");
     if (formas != NULL && fila_getSize(formas) > 0) {
         node = fila_getHead(formas);
@@ -220,7 +209,6 @@ void createSVG(char *file_name, Fila *formas)
             if (f != NULL) {
                 int id = forma_getID(f);
                 if (id >= 41 && id <= 54) {
-                    /* write shape into defs with a prefixed id */
                     switch (forma_getType(f)) {
                         case TIPO_L: {
                             Linha l = (Linha)f;
