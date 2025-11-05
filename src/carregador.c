@@ -51,8 +51,20 @@ forma carregador_loadFromChao(Carregador c, Chao *h)
 		printf("Erro: chao e/ou carregador identificado(s) como sendo nulo.\n");
 	}
 
-forma f = fila_dequeue(h);
-    
+    if (fila_isEmpty(h)) {
+        return NULL;
+    }
+
+    /* Dequeue the first item from the Chao and move it into the carregador.
+       The expected semantics of 'lc' is to transfer items from the ground
+       into the carregador (consuming the chao). */
+    item original = fila_dequeue(h);
+    if (original == NULL) return NULL;
+
+    forma f = (forma)original;
+    /* Diagnostic: report the id moved from chao into the carregador */
+    printf("[DIAG] carregador %d: moveu forma id=%d do chao para o carregador\n", carregador_getID(c), forma_getID(f));
+
     carregador_loadForma(c, f);
 
     return f;
@@ -65,7 +77,6 @@ Chao *carregador_loadAmount(Chao *h, Carregador c, int n)
         printf("Erro: chao e/ou carregador identificado(s) como sendo nulo.\n");
         return NULL;
 	}
-    carregador *mag = (carregador*)c;
 
     Fila *Historico = fila_create();
 
@@ -103,7 +114,13 @@ forma carregador_remove(Carregador c)
     
     carregador* mag = (carregador*)c;
     
-    return pilha_pop(mag -> p);
+    forma removed = pilha_pop(mag -> p);
+    if (removed != NULL) {
+        printf("[DIAG] carregador %d: removeu forma id=%d\n", carregador_getID(c), forma_getID(removed));
+    } else {
+        printf("[DIAG] carregador %d: removeu forma NULL\n", carregador_getID(c));
+    }
+    return removed;
 }
 
 void carregador_destroy(Carregador c)
@@ -116,4 +133,21 @@ void carregador_destroy(Carregador c)
 
     pilha_destroy(temp -> p);
     free(temp);
+}
+
+forma carregador_peek(Carregador c)
+{
+    if (c == NULL) return NULL;
+    carregador* mag = (carregador*)c;
+    if (mag->p == NULL) return NULL;
+    if (pilha_isEmpty(mag->p)) return NULL;
+    return (forma)pilha_peek(mag->p);
+}
+
+int carregador_getSize(Carregador c)
+{
+    if (c == NULL) return 0;
+    carregador* mag = (carregador*)c;
+    if (mag->p == NULL) return 0;
+    return pilha_getSize(mag->p);
 }

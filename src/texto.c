@@ -59,6 +59,12 @@ Texto texto_create(int id, double x, double y, char *corborda, char *corpreench,
     t -> y = y;
     t -> a = a;
 
+    /* Ensure anchor is valid; if not, default to 'i' (left). This protects
+       against malformed input or propagation of a zero char. */
+    if (!(t->a == 'i' || t->a == 'm' || t->a == 'f')) {
+        t->a = 'i';
+    }
+
     
     t -> fFamily = (char*)malloc(strlen(default_fFamily) + 1);
     if(t -> fFamily == NULL){

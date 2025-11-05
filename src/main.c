@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "fila.h"
 #include "lerGeo.h"      
@@ -44,6 +45,27 @@ int main(int argc, char *argv[]){
 
     char path_geo_completo[512];
     montaCaminho(path_geo_completo, dir_entrada, arq_geo_nome);
+    /* Se o arquivo não existir, tente adicionar a extensão .geo automaticamente */
+    {
+        FILE *fgeo = fopen(path_geo_completo, "r");
+        if (fgeo == NULL) {
+            /* tentar arq_geo_nome + ".geo" */
+            if (strstr(arq_geo_nome, ".geo") == NULL) {
+                char alt[512];
+                snprintf(alt, sizeof(alt), "%s.geo", arq_geo_nome);
+                montaCaminho(path_geo_completo, dir_entrada, alt);
+                fgeo = fopen(path_geo_completo, "r");
+                if (fgeo != NULL) {
+                    fclose(fgeo);
+                    /* atualizar arq_geo_nome para incluir a extensão, para consistência */
+                    arq_geo_nome = (char*)malloc(strlen(alt)+1); if(arq_geo_nome){ strcpy(arq_geo_nome, alt); }
+                }
+            }
+        } else {
+            fclose(fgeo);
+        }
+    }
+
 
     char nome_base_geo[256];
     char* ultimo_slash = strrchr(arq_geo_nome, '/');
@@ -72,12 +94,27 @@ int main(int argc, char *argv[]){
     }
 
     printf("Gerando SVG inicial: %s\n", path_svg_inicial);
-    printf("Gerando SVG inicial: %s\n", path_svg_inicial);
     createSVG(path_svg_inicial, meu_chao);
 
     if (arq_qry_nome != NULL) {
         char path_qry_completo[512];
         montaCaminho(path_qry_completo, dir_entrada, arq_qry_nome);
+        /* Tentar resolver qry em subpasta com o nome do geo (ex: dir/geoName/qry) se não existir o caminho direto */
+        {
+            FILE *fq = fopen(path_qry_completo, "r");
+            if (fq == NULL) {
+                char altqry[512];
+                snprintf(altqry, sizeof(altqry), "%s/%s", nome_base_geo, arq_qry_nome);
+                montaCaminho(path_qry_completo, dir_entrada, altqry);
+                fq = fopen(path_qry_completo, "r");
+                if (fq != NULL) {
+                    fclose(fq);
+                }
+            } else {
+                fclose(fq);
+            }
+        }
+
 
         char nome_base_qry[256];
         char* ultimo_slash_qry = strrchr(arq_qry_nome, '/');

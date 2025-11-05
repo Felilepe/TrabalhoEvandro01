@@ -69,4 +69,15 @@ void carregador_destroy(Carregador c);
 ******************************************************************/
 forma carregador_remove(Carregador c);
 
+/**
+ * Retorna (sem remover) a forma no topo do carregador.
+ * Retorna NULL se o carregador estiver vazio.
+ */
+forma carregador_peek(Carregador c);
+
+/**
+ * Retorna o número de formas atualmente no carregador.
+ */
+int carregador_getSize(Carregador c);
+
 #endif

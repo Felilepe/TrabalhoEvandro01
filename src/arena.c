@@ -101,7 +101,18 @@ void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_s
         forma forma_J = arena_remove(a);
 
         
-        if (checarColisao(forma_I, forma_J)) {
+    /* Diagnostic: print ids, coords and areas before checking collision */
+    double area_I_diag = forma_calcArea(forma_I);
+    double area_J_diag = forma_calcArea(forma_J);
+    double xi = forma_getCoordX(forma_I);
+    double yi = forma_getCoordY(forma_I);
+    double xj = forma_getCoordX(forma_J);
+    double yj = forma_getCoordY(forma_J);
+    bool col = checarColisao(forma_I, forma_J);
+    fprintf(arquivo_txt, "[DIAG] Comparando I=%d (x=%.2f,y=%.2f,area=%.2f) vs J=%d (x=%.2f,y=%.2f,area=%.2f) -> colisao=%s\n",
+        forma_getID(forma_I), xi, yi, area_I_diag, forma_getID(forma_J), xj, yj, area_J_diag, col ? "TRUE" : "FALSE");
+
+    if (col) {
             
 
             double area_I = forma_calcArea(forma_I);
@@ -187,4 +198,12 @@ void processaArena(Arena *a, Chao *c, double *pontuacao_total, Fila *anotacoes_s
     }
 
     fprintf(arquivo_txt, "Área total esmagada no round: %.2f\n", area_esmagada_round);
+}
+
+
+void arena_passthrough(Arena *a, void (*acao)(item i, item aux_data), item aux_data) {
+    if (a == NULL) return;
+    if (acao == NULL) return;
+    /* delegate to fila_passthrough on the internal queue */
+    fila_passthrough(a->filaArena, acao, aux_data);
 }

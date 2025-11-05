@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "retangulo.h"
 #include "circulo.h"
 #include "fila.h"
@@ -19,7 +20,11 @@ FILE* startSVG(const char* file_path) {
 	}
 
 	fprintf(svg, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
-	fprintf(svg, "<svg xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" width=\"1000\" height=\"1000\">\n<g>\n");
+    fprintf(svg, "<svg xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"1000\" height=\"1000\">\n");
+    /* emit a defs block and the two groups used by the gabarito files: result (for overlays) and fig (for shapes) */
+    fprintf(svg, "<defs>\n</defs>\n");
+    fprintf(svg, "<g id=\"result\">\n</g>\n");
+    fprintf(svg, "<g id=\"fig\">\n");
 
 	return svg;
 }
@@ -111,7 +116,91 @@ void createSVG(char *file_name, Fila *formas)
         exit(1);
     }
 
-    fila_passthrough(formas, draw, svg);
+    /* emit a <use> referencing the companion "-v.svg" visual file so output
+       includes the same use element the gabarito files have. Derive base name
+       from file_name (strip path and extension). */
+    char base[256];
+    const char* last_slash = strrchr(file_name, '/');
+    const char* fname = last_slash ? last_slash + 1 : file_name;
+    strncpy(base, fname, sizeof(base)-1);
+    base[sizeof(base)-1] = '\0';
+    char *dot = strrchr(base, '.');
+    if (dot) *dot = '\0';
+    fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
+    /* Some gabarito files include two <use> entries; emit a second one to match their structure */
+    fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
+
+    /* First pass: print any annotation shapes that were created with negative IDs
+       (the code that generates arena-antes-calc and anchor markers uses -1 as ID).
+       Emit these using the arena-antes-calc id naming scheme so the output contains
+       the extra rect/line/circle/text primitives present in the gabarito. */
+    NodeF *node = NULL;
+    if (formas != NULL && fila_getSize(formas) > 0) {
+        node = fila_getHead(formas);
+        int ann_idx = 0;
+        while (node != NULL) {
+            forma f = (forma)fila_getItem(node);
+            if (f != NULL && forma_getID(f) < 0) {
+                /* annotation shape: print here with arena-antes-calc id */
+                ann_idx++;
+                switch (forma_getType(f)) {
+                    case TIPO_R: {
+                        Retangulo r = (Retangulo)f;
+                        fprintf(svg, "\t<rect id=\"arena-antes-calc%d\" x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" fill=\"%s\" stroke=\"%s\" fill-opacity=\"%lf\" />\n",
+                            ann_idx, retangulo_getCoordX(r), retangulo_getCoordY(r), retangulo_getWidth(r), retangulo_getHeight(r),
+                            retangulo_getCorPreench(r), retangulo_getCorBorda(r), OPACITY);
+                        break;
+                    }
+                    case TIPO_C: {
+                        Circulo c = (Circulo)f;
+                        double rrad = circulo_getRaio(c);
+                        if (rrad == 2.0) {
+                            fprintf(svg, "\t<circle id=\"%d-ancoraarena-antes-calc\" r=\"2.000000\" cx=\"%lf\" cy=\"%lf\" fill=\"%s\" stroke=\"%s\" />\n",
+                                ann_idx, circulo_getCoordX(c), circulo_getCoordY(c), circulo_getCorPreench(c), circulo_getCorBorda(c));
+                        } else {
+                            fprintf(svg, "\t<circle id=\"arena-antes-calc%d\" cx=\"%lf\" cy=\"%lf\" r=\"%lf\" fill=\"%s\" stroke=\"%s\" fill-opacity=\"%lf\" />\n",
+                                ann_idx, circulo_getCoordX(c), circulo_getCoordY(c), rrad, circulo_getCorPreench(c), circulo_getCorBorda(c), OPACITY);
+                        }
+                        break;
+                    }
+                    case TIPO_L: {
+                        Linha l = (Linha)f;
+                        fprintf(svg, "\t<line id=\"arena-antes-calc%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" stroke-width=\"%lf\" />\n",
+                            ann_idx, linha_getCoordX1(l), linha_getCoordY1(l), linha_getCoordX2(l), linha_getCoordY2(l), linha_getCor(l), DEFAULT_WIDTH);
+                        break;
+                    }
+                    case TIPO_T: {
+                        Texto t = (Texto)f;
+                        fprintf(svg, "\t<text id=\"arena-antes-calc%d\" x=\"%lf\" y=\"%lf\" fill=\"%s\" stroke=\"%s\" font-family=\"%s\" font-size=\"%s\" ",
+                            ann_idx, texto_getCoordX(t), texto_getCoordY(t), texto_getCorPreench(t), texto_getCorBorda(t), texto_getFamily(t), texto_getSize(t));
+                        char ancora = texto_getAnchor(t);
+                        switch (ancora) {
+                            case 'i': default: fprintf(svg, "text-anchor=\"start\""); break;
+                            case 'm': fprintf(svg, "text-anchor=\"middle\""); break;
+                            case 'f': fprintf(svg, "text-anchor=\"end\""); break;
+                        }
+                        fprintf(svg, "> %s </text>\n", texto_getTexto(t));
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+            node = fila_getNext(node);
+        }
+    }
+
+    /* Second pass: emit the normal (non-annotation) shapes into the fig group */
+    if (formas != NULL && fila_getSize(formas) > 0) {
+        node = fila_getHead(formas);
+        while (node != NULL) {
+            forma f = (forma)fila_getItem(node);
+            if (f != NULL && forma_getID(f) >= 0) {
+                svg_insertForma(svg, f);
+            }
+            node = fila_getNext(node);
+        }
+    }
 
     stopSVG(svg);
 

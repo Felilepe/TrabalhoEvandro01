@@ -25,8 +25,12 @@ static double conversaoCoordTxtoLinhaX1(Texto t) // Converte a coordenada de x d
         case 'i': x1 = xt; break;
         case 'm': x1 = xt - 10 * (double)char_count / 2; break;
         case 'f': x1 = xt - 10 * (double)char_count; break;
-        default: printf("Erro, opcao de ancora invalida.");
-            exit(1);     
+        default:
+            /* Log and recover: treat unknown anchor as 'i' (left) to avoid aborting
+               the whole run when text anchor is malformed. */
+            fprintf(stderr, "[WARN] conversaoCoordTxtoLinhaX1: texto id=%d anchor='%c' invalido; assuming 'i'\n", texto_getID(t), at);
+            x1 = xt;
+            break;
     }
 
     return  x1;
@@ -43,8 +47,10 @@ static double conversaoCoordTxtoLinhaX2(Texto t) // Converte a coordenada de x d
         case 'i': x2 = xt + 10 * (double)char_count; break;
         case 'm': x2 = xt + 10 * (double)char_count / 2; break;
         case 'f': x2 = xt; break;
-        default: printf("Erro, opcao de ancora invalida.");
-            exit(1);     
+        default:
+            fprintf(stderr, "[WARN] conversaoCoordTxtoLinhaX2: texto id=%d anchor='%c' invalido; assuming 'i'\n", texto_getID(t), at);
+            x2 = xt + 10 * (double)char_count;
+            break;
     }
 
     return x2;

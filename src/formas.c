@@ -81,11 +81,14 @@ void forma_trocarCores(forma f)
     char* corP = forma_getCorPreench(f);
     if (corB == NULL || corP == NULL) return;
 
-    char* buffer = strdup(corB);
+    size_t len = strlen(corB) + 1;
+    char* buffer = (char*)malloc(len);
     if (buffer == NULL) {
         printf("Falha na alocacao de memoria em forma_trocarCores.\n");
         return;
     }
+
+    memcpy(buffer, corB, len);
 
     forma_setCorBorda(f, corP);
     forma_setCorPreench(f, buffer);
@@ -99,11 +102,14 @@ void forma_trocaCoresEntreFormas(forma f1, forma f2)
     char* corB2 = forma_getCorBorda(f2);
     if (corP1 == NULL || corB2 == NULL) return;
 
-    char* buffer = strdup(corB2);
+    size_t len2 = strlen(corB2) + 1;
+    char* buffer = (char*)malloc(len2);
     if (buffer == NULL) {
         printf("Falha na alocacao de memoria em forma_trocaCoresEntreFormas.\n");
         return;
     }
+
+    memcpy(buffer, corB2, len2);
 
     forma_setCorBorda(f2, corP1);
     forma_setCorPreench(f1, buffer);

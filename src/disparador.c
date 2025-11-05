@@ -121,9 +121,11 @@ item disparador_shift(Disparador *d, char b, int n) //shft
         for(int i = 0; i < n; i++){
             if(d -> pos_lanc != NULL && d->cdir != NULL){
                 carregador_loadForma(d -> cdir, d -> pos_lanc);
+                printf("[DIAG] disparador %d: carregou pos_lanc id=%d into carregador %d\n", d->id, forma_getID(d->pos_lanc), carregador_getID(d->cdir));
             }
             if (d->cesq != NULL && !carregador_isEmpty(d->cesq)) {
                 d -> pos_lanc = carregador_remove(d -> cesq);
+                if (d->pos_lanc) printf("[DIAG] disparador %d: pos_lanc set to id=%d (from cesq)\n", d->id, forma_getID(d->pos_lanc));
             } else {
                 d -> pos_lanc = NULL;
             }
@@ -132,9 +134,11 @@ item disparador_shift(Disparador *d, char b, int n) //shft
         for(int i = 0; i < n; i++){
             if(d -> pos_lanc != NULL && d->cesq != NULL){
                 carregador_loadForma(d -> cesq, d ->pos_lanc);
+                printf("[DIAG] disparador %d: carregou pos_lanc id=%d into carregador %d\n", d->id, forma_getID(d->pos_lanc), carregador_getID(d->cesq));
             }
             if (d->cdir != NULL && !carregador_isEmpty(d->cdir)) {
                 d -> pos_lanc = carregador_remove(d -> cdir);
+                if (d->pos_lanc) printf("[DIAG] disparador %d: pos_lanc set to id=%d (from cdir)\n", d->id, forma_getID(d->pos_lanc));
             } else {
                 d -> pos_lanc = NULL;
             }
