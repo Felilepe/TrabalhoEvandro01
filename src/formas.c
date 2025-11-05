@@ -147,7 +147,7 @@ forma forma_clonar(forma f) {
 
     static int max_id = 10000;
     int novo_id = ++max_id;
-    int tipo = forma_getType(f); // Esta função sua já está correta
+    int tipo = forma_getType(f); 
     
     forma novo_clone = NULL;
 
@@ -236,7 +236,21 @@ double forma_getCoordX(forma f)
     switch(forma_generica -> type){
         case(TIPO_C): coordx = circulo_getCoordX((Circulo)f); break;
         case(TIPO_R): coordx = retangulo_getCoordX((Retangulo)f); break;
-        case(TIPO_L): coordx = linha_getCoordX1((Linha)f); break; //Por convenção, x1 será considerado o X da âncora
+        case(TIPO_L): {
+            Linha l = (Linha)f;
+            double x1 = linha_getCoordX1(l);
+            double x2 = linha_getCoordX2(l);
+
+            if (x1 < x2) {
+                return x1; 
+            } else if (x1 > x2) {
+                return x2; 
+            } else {
+
+                return x1;
+            }
+            break;
+        }
         case(TIPO_T): coordx = texto_getCoordX((Texto)f); break;
         default: printf("Erro: tipo de forma invalido no forma_getCoordX."); exit(1); break;
     }
@@ -251,7 +265,26 @@ double forma_getCoordY(forma f)
     switch(forma_generica -> type){
         case(TIPO_C): coordy = circulo_getCoordY((Circulo)f); break;
         case(TIPO_R): coordy = retangulo_getCoordY((Retangulo)f); break;
-        case(TIPO_L): coordy = linha_getCoordY1((Linha)f); break; //Por convenção, y1 será considerado o Y da âncora
+        case(TIPO_L): {
+            Linha l = (Linha)f;
+            double x1 = linha_getCoordX1(l);
+            double y1 = linha_getCoordY1(l);
+            double x2 = linha_getCoordX2(l);
+            double y2 = linha_getCoordY2(l);
+
+            if (x1 < x2) {
+                return y1; 
+            } else if (x1 > x2) {
+                return y2; 
+            } else {
+                if (y1 <= y2) {
+                    return y1; 
+                } else {
+                    return y2; 
+                }
+            }
+            break;
+        }
         case(TIPO_T): coordy = texto_getCoordY((Texto)f); break;
         default: printf("Erro: tipo de forma invalido no forma_getCoordY."); exit(1); break;
     }
@@ -335,14 +368,33 @@ void forma_setCoordX(forma f, double x)
         case(TIPO_T): texto_setCoordX((Texto)f, x); break;
         case(TIPO_L): {
             Linha l = (Linha)f;
+            double x1_atual = linha_getCoordX1(l);
+            double y1_atual = linha_getCoordY1(l); 
+            double x2_atual = linha_getCoordX2(l);
+            double y2_atual = linha_getCoordY2(l); 
 
-            double x1temp = linha_getCoordX1(l);
-            double x2temp = linha_getCoordX2(l);
+            double delta_x;
+            bool p1_era_ancora;
 
-            double delta = x2temp - x1temp;
+            if (x1_atual < x2_atual) {
+                p1_era_ancora = true;
+            } else if (x1_atual > x2_atual) {
+                p1_era_ancora = false;
+            } else {
+                p1_era_ancora = (y1_atual <= y2_atual);
+            }
 
-            linha_setCoordX1(l, x);
-            linha_setCoordX2(l, (x + delta));
+            if (p1_era_ancora) {
+                delta_x = x2_atual - x1_atual;
+                
+                linha_setCoordX1(l, x);           
+                linha_setCoordX2(l, x + delta_x);
+            } else {
+                delta_x = x1_atual - x2_atual;
+
+                linha_setCoordX2(l, x);           
+                linha_setCoordX1(l, x + delta_x); 
+            }
             break;
         }
         default: printf("Erro: tipo de forma invalido em forma_setCoordX."); exit(1); break;
@@ -359,14 +411,33 @@ void forma_setCoordY(forma f, double y)
         case(TIPO_T): texto_setCoordY((Texto)f, y); break;
         case(TIPO_L): {
             Linha l = (Linha)f;
+            double x1_atual = linha_getCoordX1(l);
+            double y1_atual = linha_getCoordY1(l);
+            double x2_atual = linha_getCoordX2(l);
+            double y2_atual = linha_getCoordY2(l);
 
-            double y1temp = linha_getCoordY1(l);
-            double y2temp = linha_getCoordY2(l);
+            double delta_y;
+            bool p1_era_ancora;
 
-            double delta = y2temp - y1temp;
+            if (x1_atual < x2_atual) {
+                p1_era_ancora = true;
+            } else if (x1_atual > x2_atual) {
+                p1_era_ancora = false;
+            } else {
+                p1_era_ancora = (y1_atual <= y2_atual);
+            }
 
-            linha_setCoordY1(l, y);
-            linha_setCoordY2(l, (y + delta));
+            if (p1_era_ancora) {
+                delta_y = y2_atual - y1_atual;
+
+                linha_setCoordY1(l, y);          
+                linha_setCoordY2(l, y + delta_y); 
+            } else {
+                delta_y = y1_atual - y2_atual;
+
+                linha_setCoordY2(l, y);        
+                linha_setCoordY1(l, y + delta_y); 
+            }
             break;
         }
         default: printf("Erro: tipo de forma invalido em forma_setCoordY."); exit(1); break;
