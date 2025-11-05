@@ -19,12 +19,12 @@ FILE* startSVG(const char* file_path) {
 		exit(1);
 	}
 
-	fprintf(svg, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
-    fprintf(svg, "<svg xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"1000\" height=\"1000\">\n");
-    /* emit a defs block and the two groups used by the gabarito files: result (for overlays) and fig (for shapes) */
-    fprintf(svg, "<defs>\n</defs>\n");
-    fprintf(svg, "<g id=\"result\">\n</g>\n");
-    fprintf(svg, "<g id=\"fig\">\n");
+     fprintf(svg, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
+     fprintf(svg, "<svg xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"1000\" height=\"1000\">\n");
+
+     /* Do not emit <defs> or <g id="result"> here. Those will be populated
+         later by createSVG so we can place the <defs> block after the main
+         figure content to better match the gabarito structure. */
 
 	return svg;
 }
@@ -33,9 +33,12 @@ void stopSVG(FILE *file_name)
 {
     if (file_name == NULL) return;
 
-	fprintf(file_name, "</g>\n</svg>\n");
+    /* Close the SVG document. createSVG is responsible for closing any
+       opened groups (like <g id="fig">) and for emitting the <defs>
+       block before this call. */
+    fprintf(file_name, "</svg>\n");
 
-	fclose(file_name);
+    fclose(file_name);
 }
 
 
@@ -116,9 +119,9 @@ void createSVG(char *file_name, Fila *formas)
         exit(1);
     }
 
-    /* emit a <use> referencing the companion "-v.svg" visual file so output
-       includes the same use element the gabarito files have. Derive base name
-       from file_name (strip path and extension). */
+     /* emit a <use> referencing the companion "-v.svg" visual file so output
+         includes the same use element the gabarito files have. Derive base name
+         from file_name (strip path and extension). */
     char base[256];
     const char* last_slash = strrchr(file_name, '/');
     const char* fname = last_slash ? last_slash + 1 : file_name;
@@ -126,14 +129,14 @@ void createSVG(char *file_name, Fila *formas)
     base[sizeof(base)-1] = '\0';
     char *dot = strrchr(base, '.');
     if (dot) *dot = '\0';
-    fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
-    /* Some gabarito files include two <use> entries; emit a second one to match their structure */
-    fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
+     fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
+     /* Some gabarito files include two <use> entries; emit a second one to match their structure */
+     fprintf(svg, "\t<use height=\"100%%\" width=\"100%%\" x=\"0\" y=\"0\" xlink:href=\"%s-v.svg#via\" />\n", base);
 
-    /* First pass: print any annotation shapes that were created with negative IDs
-       (the code that generates arena-antes-calc and anchor markers uses -1 as ID).
-       Emit these using the arena-antes-calc id naming scheme so the output contains
-       the extra rect/line/circle/text primitives present in the gabarito. */
+     /* First pass: print any annotation shapes that were created with negative IDs
+         (the code that generates arena-antes-calc and anchor markers uses -1 as ID).
+         Emit these using the arena-antes-calc id naming scheme so the output contains
+         the extra rect/line/circle/text primitives present in the gabarito. */
     NodeF *node = NULL;
     if (formas != NULL && fila_getSize(formas) > 0) {
         node = fila_getHead(formas);
@@ -191,6 +194,7 @@ void createSVG(char *file_name, Fila *formas)
     }
 
     /* Second pass: emit the normal (non-annotation) shapes into the fig group */
+    fprintf(svg, "<g id=\"fig\">\n");
     if (formas != NULL && fila_getSize(formas) > 0) {
         node = fila_getHead(formas);
         while (node != NULL) {
@@ -201,6 +205,58 @@ void createSVG(char *file_name, Fila *formas)
             node = fila_getNext(node);
         }
     }
+    fprintf(svg, "</g>\n");
+
+    /* Now populate <defs><g id="result"> with selected result shapes. The
+       original gabarito places several overlay/result elements inside defs
+       and references them later via <use xlink:href="#result" />. We'll
+       collect shapes with IDs in the range 41..54 and write them into the
+       result group using ids similar to the gabarito (ln*, rt*, cc*, txt*). */
+    fprintf(svg, "<defs>\n<g id=\"result\">\n");
+    if (formas != NULL && fila_getSize(formas) > 0) {
+        node = fila_getHead(formas);
+        while (node != NULL) {
+            forma f = (forma)fila_getItem(node);
+            if (f != NULL) {
+                int id = forma_getID(f);
+                if (id >= 41 && id <= 54) {
+                    /* write shape into defs with a prefixed id */
+                    switch (forma_getType(f)) {
+                        case TIPO_L: {
+                            Linha l = (Linha)f;
+                            fprintf(svg, "\t<line id=\"ln%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" opacity=\"1.000000\" />\n",
+                                id, linha_getCoordX1(l), linha_getCoordY1(l), linha_getCoordX2(l), linha_getCoordY2(l), linha_getCor(l));
+                            break;
+                        }
+                        case TIPO_R: {
+                            Retangulo r = (Retangulo)f;
+                            fprintf(svg, "\t<rect id=\"rt%d\" x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" fill=\"%s\" stroke=\"%s\" opacity=\"0.500000\" />\n",
+                                id, retangulo_getCoordX(r), retangulo_getCoordY(r), retangulo_getWidth(r), retangulo_getHeight(r), retangulo_getCorPreench(r), retangulo_getCorBorda(r));
+                            break;
+                        }
+                        case TIPO_C: {
+                            Circulo c = (Circulo)f;
+                            fprintf(svg, "\t<circle id=\"cc%d\" cx=\"%lf\" cy=\"%lf\" r=\"%lf\" fill=\"%s\" stroke=\"%s\" opacity=\"0.500000\" />\n",
+                                id, circulo_getCoordX(c), circulo_getCoordY(c), circulo_getRaio(c), circulo_getCorPreench(c), circulo_getCorBorda(c));
+                            break;
+                        }
+                        case TIPO_T: {
+                            Texto t = (Texto)f;
+                            fprintf(svg, "\t<text id=\"txt%d\" x=\"%lf\" y=\"%lf\" fill=\"%s\" stroke=\"%s\">%s</text>\n",
+                                id, texto_getCoordX(t), texto_getCoordY(t), texto_getCorPreench(t), texto_getCorBorda(t), texto_getTexto(t));
+                            break;
+                        }
+                        default: break;
+                    }
+                }
+            }
+            node = fila_getNext(node);
+        }
+    }
+    fprintf(svg, "</g>\n</defs>\n");
+
+    /* Place a use to render the result group on the right side as in gabarito */
+    fprintf(svg, "<use x=\"690.28\" y=\"15.00\" xlink:href=\"#result\" />\n");
 
     stopSVG(svg);
 
