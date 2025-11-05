@@ -21,14 +21,15 @@ static double conversaoCoordTxtoLinhaX1(Texto t) // Converte a coordenada de x d
     char at = texto_getAnchor(t);
     double x1;
 
+
+    if (at == 's' || at == 'S' || at == 'l' || at == 'L') at = 'i';
+    if (at == 'e' || at == 'E') at = 'f';
+
     switch(at){
         case 'i': x1 = xt; break;
         case 'm': x1 = xt - 10 * (double)char_count / 2; break;
         case 'f': x1 = xt - 10 * (double)char_count; break;
         default:
-            /* Log and recover: treat unknown anchor as 'i' (left) to avoid aborting
-               the whole run when text anchor is malformed. */
-            fprintf(stderr, "[WARN] conversaoCoordTxtoLinhaX1: texto id=%d anchor='%c' invalido; assuming 'i'\n", texto_getID(t), at);
             x1 = xt;
             break;
     }
@@ -43,12 +44,14 @@ static double conversaoCoordTxtoLinhaX2(Texto t) // Converte a coordenada de x d
     char at = texto_getAnchor(t);
     double x2;
 
+    if (at == 's' || at == 'S' || at == 'l' || at == 'L') at = 'i';
+    if (at == 'e' || at == 'E') at = 'f';
+
     switch(at){
         case 'i': x2 = xt + 10 * (double)char_count; break;
         case 'm': x2 = xt + 10 * (double)char_count / 2; break;
         case 'f': x2 = xt; break;
         default:
-            fprintf(stderr, "[WARN] conversaoCoordTxtoLinhaX2: texto id=%d anchor='%c' invalido; assuming 'i'\n", texto_getID(t), at);
             x2 = xt + 10 * (double)char_count;
             break;
     }
