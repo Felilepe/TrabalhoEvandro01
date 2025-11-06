@@ -118,9 +118,19 @@
         char peso[STYLE_WEIGHT_SIZE];
         char tamanho[STYLE_SIZE_SIZE];
 
-        int num_lidos = sscanf(Linha, "ts %s %s %s", familia, peso, tamanho);
-        if (num_lidos == 3) {
         
+        int num_lidos = sscanf(Linha, "ts %s %s %s", familia, peso, tamanho);
+        switch(peso[0]) {
+            case 'n': strcpy(peso, "normal"); break;
+            case 'b': switch(peso[1]){
+                case '+': strcpy(peso, "bolder"); break;
+                default: strcpy(peso, "bold"); break;
+            } break;
+            case 'l': strcpy(peso, "lighter"); break;
+            default: strcpy(peso, "normal"); break;
+        }
+        if (num_lidos == 3) {
+            
             texto_setNewStyle(familia, peso, tamanho);
         }
     }
