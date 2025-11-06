@@ -24,7 +24,7 @@ static void inicializarDefault()
     default_fFamily = (char*)malloc(strlen("serif") + 1);
     strcpy(default_fFamily, "serif");
 
-    default_fWeight = (char*)malloc(strlen("n") + 1);
+    default_fWeight = (char*)malloc(strlen("normal") + 1);
     strcpy(default_fWeight,"n");
 
     default_fSize = (char*)malloc(strlen("12") + 1);
