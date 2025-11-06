@@ -21,8 +21,8 @@ static char *default_fSize = NULL;
 
 static void inicializarDefault()
 {
-    default_fFamily = (char*)malloc(strlen("Arial") + 1);
-    strcpy(default_fFamily, "Arial");
+    default_fFamily = (char*)malloc(strlen("serif") + 1);
+    strcpy(default_fFamily, "serif");
 
     default_fWeight = (char*)malloc(strlen("n") + 1);
     strcpy(default_fWeight,"n");
