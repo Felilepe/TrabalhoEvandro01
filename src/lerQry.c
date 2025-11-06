@@ -27,7 +27,6 @@ struct repositorio
     Lista *Carregadores; // Lista sem ID
 };
 
-// (report_txt não é necessária se pds/lds não existem)
 
 typedef struct stEstatisticas 
 {
@@ -230,7 +229,6 @@ static void executar_simulacao_calc(Arena *a, Chao *c, double *pontuacao_total, 
         forma forma_I = arena_remove(a);
         forma forma_J = arena_remove(a);
 
-    /* Diagnostic: compute areas/coords and log the pair before collision check */
     double area_I_diag = forma_calcArea(forma_I);
     double area_J_diag = forma_calcArea(forma_J);
     double xi = forma_getCoordX(forma_I);
@@ -358,9 +356,7 @@ static void processar_atch(char* linha, Repositorio* repo, estatisticas* stats) 
     Carregador c1 = encontrarOuCriarCarregador(repo, id2);
     Carregador c2 = encontrarOuCriarCarregador(repo, id3);
     if (d && c1 && c2) {
-        /* Swap the order to match expected semantics: attach(c2,c1)
-           so that the QRY 'atch id l r' maps correctly to left/right
-           in the Disparador. This reverses the earlier assumption. */
+
         disparador_attachCarregador(d, c2, c1);
         stats -> instrucoes_realizadas++;
     }
@@ -374,7 +370,6 @@ static void processar_shft(char* linha, Repositorio* repo, FILE* arquivo_txt, es
     Disparador *d = (Disparador*) encontrar_item_na_lista(repo->Disparadores, id, acao_encontrar_disparador);
     if (d) {
         stats->instrucoes_realizadas++;
-        /* Diagnostic: print carregador sizes and top IDs for attached carregadores */
         Carregador cesq = disparador_getCEsq(d);
         Carregador cdir = disparador_getCDir(d);
         int size_esq = cesq ? carregador_getSize(cesq) : 0;
@@ -389,7 +384,6 @@ static void processar_shft(char* linha, Repositorio* repo, FILE* arquivo_txt, es
 
         forma forma_final = disparador_getFormaDisparo(d);
 
-        /* Diagnostic: print state after shift */
         size_esq = cesq ? carregador_getSize(cesq) : 0;
         size_dir = cdir ? carregador_getSize(cdir) : 0;
         top_esq = cesq ? carregador_peek(cesq) : NULL;
@@ -418,7 +412,6 @@ static void processar_dsp(char* linha, Repositorio* repo, Arena* arena,
         stats->instrucoes_realizadas++;
         double x_inicial = disparador_getCoordX(d);
         double y_inicial = disparador_getCoordY(d);
-    /* Diagnostic: print pos_lanc before disparo */
     forma before = disparador_getFormaDisparo(d);
     fprintf(arquivo_txt, "[DIAG] dsp: disparador id=%d pos_lanc_before=%d coords=(%.2f,%.2f)\n",
         disparador_getID(d), before ? forma_getID(before) : -1,
@@ -426,7 +419,6 @@ static void processar_dsp(char* linha, Repositorio* repo, Arena* arena,
 
     forma forma_disparada = disparador_disparar(d, dx, dy);
 
-    /* Diagnostic: print pos_lanc after disparo */
     forma after = disparador_getFormaDisparo(d);
     fprintf(arquivo_txt, "[DIAG] dsp: disparador id=%d pos_lanc_after=%d\n",
         disparador_getID(d), after ? forma_getID(after) : -1);
@@ -484,10 +476,8 @@ static void acao_criar_anotacao(item i, item aux) {
             double h = retangulo_getHeight(r);
             char *corb = retangulo_getCorBorda(r);
             char *corp = retangulo_getCorPreench(r);
-            /* create rect annotation (semi-transparent) */
             Retangulo r_ann = retangulo_create(-1, x, y, w, h, corb, corp);
             fila_queue(fila, (forma)r_ann);
-            /* small red anchor circle */
             Circulo c_ann = circulo_create(-1, x, y, 2.0, "black", "red");
             fila_queue(fila, (forma)c_ann);
             break;
